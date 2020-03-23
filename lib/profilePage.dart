@@ -21,9 +21,10 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Padding(
           padding: EdgeInsets.all(5.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Container(
-                height: 350,
+                height: 300,
                 child: Row(
                   children: <Widget>[
                     StatBar(barColor: Colors.blue,),
@@ -38,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Divider(height: 10.0, thickness: 5, color: Colors.black,),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   SkillBox(),
                   SkillBox(),
@@ -137,6 +138,9 @@ class _StatBarState extends State<StatBar> {
   }
 }
 
+//todo: SkillBox layout těch widgetů
+//todo: Gesture detector pro horizontal swipe
+//todo: SkillName bude uložen v gameloop
 class SkillBox extends StatefulWidget {
   @override
   _SkillBoxState createState() => _SkillBoxState();
@@ -145,10 +149,16 @@ class SkillBox extends StatefulWidget {
 class _SkillBoxState extends State<SkillBox> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      height: 100,
-      decoration: BoxDecoration(border: Border.all(width: 2), color: Colors.grey[300],),
+    return Expanded(
+      child: Padding(
+        padding:  EdgeInsets.all(5.0),
+        child: AspectRatio(
+          aspectRatio: 1/1,
+          child: Container(
+            decoration: BoxDecoration(border: Border.all(width: 2), color: Colors.grey[300],),
+          ),
+        ),
+      ),
     );
   }
 }

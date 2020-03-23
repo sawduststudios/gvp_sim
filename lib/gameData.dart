@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'database/moor_database.dart';
 
+
+//todo: uložit jména skillů ve skillboxu
 class GameData with ChangeNotifier {
   int _sleep = 0;
   int _money;

@@ -43,6 +43,8 @@ class EventStates extends Table{
   Set<Column> get primaryKey => {id};
 }
 
+//todo: Přidat možost ovlivnit gamedata
+//todo: Přidat možnost požadavku na staty
 //Convertor pro EventStates
 class ButtonDataConvertor extends TypeConverter<ButtonData, String> {
   const ButtonDataConvertor();

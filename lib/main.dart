@@ -7,6 +7,7 @@ import 'package:gvp_sim_db/skill_page.dart';
 import 'package:provider/provider.dart';
 import 'database/moor_database.dart';
 
+//todo: Zprovoznit celý gameloop
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {

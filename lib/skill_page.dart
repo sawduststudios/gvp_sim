@@ -74,7 +74,7 @@ class SkillTile extends StatelessWidget {
           isThreeLine: true,
           trailing: Text(
             'Aktivní',
-            style: TextStyle(color: Colors.green), //todo: Nějak sledovat, jestli je skill aktivní. V databázi?
+            style: TextStyle(color: Colors.green), //todo: Zelená tečka u skillů, co maji stejne jmeno jako jedno z trch ulozenych v game datech
           )
         ),
       ),
