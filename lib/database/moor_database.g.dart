@@ -978,6 +978,389 @@ class $EventStatesTable extends EventStates
       const ButtonDataConvertor();
 }
 
+class GameDataSave extends DataClass implements Insertable<GameDataSave> {
+  final int id;
+  final int sleep;
+  final int money;
+  final int happiness;
+  final int peerPopularity;
+  final int parentPopularity;
+  final int teacherPopularity;
+  GameDataSave(
+      {@required this.id,
+      this.sleep,
+      this.money,
+      this.happiness,
+      this.peerPopularity,
+      this.parentPopularity,
+      this.teacherPopularity});
+  factory GameDataSave.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final intType = db.typeSystem.forDartType<int>();
+    return GameDataSave(
+      id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      sleep: intType.mapFromDatabaseResponse(data['${effectivePrefix}sleep']),
+      money: intType.mapFromDatabaseResponse(data['${effectivePrefix}money']),
+      happiness:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}happiness']),
+      peerPopularity: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}peer_popularity']),
+      parentPopularity: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}parent_popularity']),
+      teacherPopularity: intType.mapFromDatabaseResponse(
+          data['${effectivePrefix}teacher_popularity']),
+    );
+  }
+  factory GameDataSave.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return GameDataSave(
+      id: serializer.fromJson<int>(json['id']),
+      sleep: serializer.fromJson<int>(json['sleep']),
+      money: serializer.fromJson<int>(json['money']),
+      happiness: serializer.fromJson<int>(json['happiness']),
+      peerPopularity: serializer.fromJson<int>(json['peerPopularity']),
+      parentPopularity: serializer.fromJson<int>(json['parentPopularity']),
+      teacherPopularity: serializer.fromJson<int>(json['teacherPopularity']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'sleep': serializer.toJson<int>(sleep),
+      'money': serializer.toJson<int>(money),
+      'happiness': serializer.toJson<int>(happiness),
+      'peerPopularity': serializer.toJson<int>(peerPopularity),
+      'parentPopularity': serializer.toJson<int>(parentPopularity),
+      'teacherPopularity': serializer.toJson<int>(teacherPopularity),
+    };
+  }
+
+  @override
+  GameDataSavesCompanion createCompanion(bool nullToAbsent) {
+    return GameDataSavesCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      sleep:
+          sleep == null && nullToAbsent ? const Value.absent() : Value(sleep),
+      money:
+          money == null && nullToAbsent ? const Value.absent() : Value(money),
+      happiness: happiness == null && nullToAbsent
+          ? const Value.absent()
+          : Value(happiness),
+      peerPopularity: peerPopularity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(peerPopularity),
+      parentPopularity: parentPopularity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentPopularity),
+      teacherPopularity: teacherPopularity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(teacherPopularity),
+    );
+  }
+
+  GameDataSave copyWith(
+          {int id,
+          int sleep,
+          int money,
+          int happiness,
+          int peerPopularity,
+          int parentPopularity,
+          int teacherPopularity}) =>
+      GameDataSave(
+        id: id ?? this.id,
+        sleep: sleep ?? this.sleep,
+        money: money ?? this.money,
+        happiness: happiness ?? this.happiness,
+        peerPopularity: peerPopularity ?? this.peerPopularity,
+        parentPopularity: parentPopularity ?? this.parentPopularity,
+        teacherPopularity: teacherPopularity ?? this.teacherPopularity,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('GameDataSave(')
+          ..write('id: $id, ')
+          ..write('sleep: $sleep, ')
+          ..write('money: $money, ')
+          ..write('happiness: $happiness, ')
+          ..write('peerPopularity: $peerPopularity, ')
+          ..write('parentPopularity: $parentPopularity, ')
+          ..write('teacherPopularity: $teacherPopularity')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(
+      id.hashCode,
+      $mrjc(
+          sleep.hashCode,
+          $mrjc(
+              money.hashCode,
+              $mrjc(
+                  happiness.hashCode,
+                  $mrjc(
+                      peerPopularity.hashCode,
+                      $mrjc(parentPopularity.hashCode,
+                          teacherPopularity.hashCode)))))));
+  @override
+  bool operator ==(dynamic other) =>
+      identical(this, other) ||
+      (other is GameDataSave &&
+          other.id == this.id &&
+          other.sleep == this.sleep &&
+          other.money == this.money &&
+          other.happiness == this.happiness &&
+          other.peerPopularity == this.peerPopularity &&
+          other.parentPopularity == this.parentPopularity &&
+          other.teacherPopularity == this.teacherPopularity);
+}
+
+class GameDataSavesCompanion extends UpdateCompanion<GameDataSave> {
+  final Value<int> id;
+  final Value<int> sleep;
+  final Value<int> money;
+  final Value<int> happiness;
+  final Value<int> peerPopularity;
+  final Value<int> parentPopularity;
+  final Value<int> teacherPopularity;
+  const GameDataSavesCompanion({
+    this.id = const Value.absent(),
+    this.sleep = const Value.absent(),
+    this.money = const Value.absent(),
+    this.happiness = const Value.absent(),
+    this.peerPopularity = const Value.absent(),
+    this.parentPopularity = const Value.absent(),
+    this.teacherPopularity = const Value.absent(),
+  });
+  GameDataSavesCompanion.insert({
+    @required int id,
+    this.sleep = const Value.absent(),
+    this.money = const Value.absent(),
+    this.happiness = const Value.absent(),
+    this.peerPopularity = const Value.absent(),
+    this.parentPopularity = const Value.absent(),
+    this.teacherPopularity = const Value.absent(),
+  }) : id = Value(id);
+  GameDataSavesCompanion copyWith(
+      {Value<int> id,
+      Value<int> sleep,
+      Value<int> money,
+      Value<int> happiness,
+      Value<int> peerPopularity,
+      Value<int> parentPopularity,
+      Value<int> teacherPopularity}) {
+    return GameDataSavesCompanion(
+      id: id ?? this.id,
+      sleep: sleep ?? this.sleep,
+      money: money ?? this.money,
+      happiness: happiness ?? this.happiness,
+      peerPopularity: peerPopularity ?? this.peerPopularity,
+      parentPopularity: parentPopularity ?? this.parentPopularity,
+      teacherPopularity: teacherPopularity ?? this.teacherPopularity,
+    );
+  }
+}
+
+class $GameDataSavesTable extends GameDataSaves
+    with TableInfo<$GameDataSavesTable, GameDataSave> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $GameDataSavesTable(this._db, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  GeneratedIntColumn _id;
+  @override
+  GeneratedIntColumn get id => _id ??= _constructId();
+  GeneratedIntColumn _constructId() {
+    return GeneratedIntColumn(
+      'id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _sleepMeta = const VerificationMeta('sleep');
+  GeneratedIntColumn _sleep;
+  @override
+  GeneratedIntColumn get sleep => _sleep ??= _constructSleep();
+  GeneratedIntColumn _constructSleep() {
+    return GeneratedIntColumn(
+      'sleep',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _moneyMeta = const VerificationMeta('money');
+  GeneratedIntColumn _money;
+  @override
+  GeneratedIntColumn get money => _money ??= _constructMoney();
+  GeneratedIntColumn _constructMoney() {
+    return GeneratedIntColumn(
+      'money',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _happinessMeta = const VerificationMeta('happiness');
+  GeneratedIntColumn _happiness;
+  @override
+  GeneratedIntColumn get happiness => _happiness ??= _constructHappiness();
+  GeneratedIntColumn _constructHappiness() {
+    return GeneratedIntColumn(
+      'happiness',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _peerPopularityMeta =
+      const VerificationMeta('peerPopularity');
+  GeneratedIntColumn _peerPopularity;
+  @override
+  GeneratedIntColumn get peerPopularity =>
+      _peerPopularity ??= _constructPeerPopularity();
+  GeneratedIntColumn _constructPeerPopularity() {
+    return GeneratedIntColumn(
+      'peer_popularity',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _parentPopularityMeta =
+      const VerificationMeta('parentPopularity');
+  GeneratedIntColumn _parentPopularity;
+  @override
+  GeneratedIntColumn get parentPopularity =>
+      _parentPopularity ??= _constructParentPopularity();
+  GeneratedIntColumn _constructParentPopularity() {
+    return GeneratedIntColumn(
+      'parent_popularity',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _teacherPopularityMeta =
+      const VerificationMeta('teacherPopularity');
+  GeneratedIntColumn _teacherPopularity;
+  @override
+  GeneratedIntColumn get teacherPopularity =>
+      _teacherPopularity ??= _constructTeacherPopularity();
+  GeneratedIntColumn _constructTeacherPopularity() {
+    return GeneratedIntColumn(
+      'teacher_popularity',
+      $tableName,
+      true,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        sleep,
+        money,
+        happiness,
+        peerPopularity,
+        parentPopularity,
+        teacherPopularity
+      ];
+  @override
+  $GameDataSavesTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'game_data_saves';
+  @override
+  final String actualTableName = 'game_data_saves';
+  @override
+  VerificationContext validateIntegrity(GameDataSavesCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.id.present) {
+      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (d.sleep.present) {
+      context.handle(
+          _sleepMeta, sleep.isAcceptableValue(d.sleep.value, _sleepMeta));
+    }
+    if (d.money.present) {
+      context.handle(
+          _moneyMeta, money.isAcceptableValue(d.money.value, _moneyMeta));
+    }
+    if (d.happiness.present) {
+      context.handle(_happinessMeta,
+          happiness.isAcceptableValue(d.happiness.value, _happinessMeta));
+    }
+    if (d.peerPopularity.present) {
+      context.handle(
+          _peerPopularityMeta,
+          peerPopularity.isAcceptableValue(
+              d.peerPopularity.value, _peerPopularityMeta));
+    }
+    if (d.parentPopularity.present) {
+      context.handle(
+          _parentPopularityMeta,
+          parentPopularity.isAcceptableValue(
+              d.parentPopularity.value, _parentPopularityMeta));
+    }
+    if (d.teacherPopularity.present) {
+      context.handle(
+          _teacherPopularityMeta,
+          teacherPopularity.isAcceptableValue(
+              d.teacherPopularity.value, _teacherPopularityMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  GameDataSave map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return GameDataSave.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(GameDataSavesCompanion d) {
+    final map = <String, Variable>{};
+    if (d.id.present) {
+      map['id'] = Variable<int, IntType>(d.id.value);
+    }
+    if (d.sleep.present) {
+      map['sleep'] = Variable<int, IntType>(d.sleep.value);
+    }
+    if (d.money.present) {
+      map['money'] = Variable<int, IntType>(d.money.value);
+    }
+    if (d.happiness.present) {
+      map['happiness'] = Variable<int, IntType>(d.happiness.value);
+    }
+    if (d.peerPopularity.present) {
+      map['peer_popularity'] = Variable<int, IntType>(d.peerPopularity.value);
+    }
+    if (d.parentPopularity.present) {
+      map['parent_popularity'] =
+          Variable<int, IntType>(d.parentPopularity.value);
+    }
+    if (d.teacherPopularity.present) {
+      map['teacher_popularity'] =
+          Variable<int, IntType>(d.teacherPopularity.value);
+    }
+    return map;
+  }
+
+  @override
+  $GameDataSavesTable createAlias(String alias) {
+    return $GameDataSavesTable(_db, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $SkillsTable _skills;
@@ -986,23 +1369,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $EventsTable get events => _events ??= $EventsTable(this);
   $EventStatesTable _eventStates;
   $EventStatesTable get eventStates => _eventStates ??= $EventStatesTable(this);
+  $GameDataSavesTable _gameDataSaves;
+  $GameDataSavesTable get gameDataSaves =>
+      _gameDataSaves ??= $GameDataSavesTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [skills, events, eventStates];
-}
-
-// **************************************************************************
-// DaoGenerator
-// **************************************************************************
-
-mixin _$SkillDaoMixin on DatabaseAccessor<AppDatabase> {
-  $SkillsTable get skills => db.skills;
-}
-mixin _$EventDaoMixin on DatabaseAccessor<AppDatabase> {
-  $EventsTable get events => db.events;
-}
-mixin _$EventStatesDaoMixin on DatabaseAccessor<AppDatabase> {
-  $EventStatesTable get eventStates => db.eventStates;
+      [skills, events, eventStates, gameDataSaves];
 }

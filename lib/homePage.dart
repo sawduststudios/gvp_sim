@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gvp_sim_db/database/moor_database.dart';
 import 'package:gvp_sim_db/database/dataStorage.dart';
 import 'package:provider/provider.dart';
+import 'gameData.dart';
 
 class HomePage extends StatelessWidget {
   //HomePage({Key key}): super(key : key);
@@ -52,7 +53,10 @@ class HomePage extends StatelessWidget {
                   fontSize: 24,
                 ),
               ),
-              onPressed: () {Navigator.pushNamed(context, '/ProfilePage');},
+              onPressed: () {
+                //AppDatabase db = Provider.of<AppDatabase>(context, listen: false);
+                //GameData.loadFromDatabase(db); todo: nefunguje kvuli static acces
+                Navigator.pushNamed(context, '/ProfilePage');},
             ),
             SizedBox(
               height: 30,

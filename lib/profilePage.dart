@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gvp_sim_db/database/moor_database.dart';
 import 'package:gvp_sim_db/gameData.dart';
 import 'package:provider/provider.dart';
 
@@ -78,7 +79,9 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               onPressed: (){
                 final data = Provider.of<GameData>(context, listen: false);
+                final db = Provider.of<AppDatabase>(context, listen: false);
                 data.sleep -= 10;
+                data.saveToDatabase(db);
               },
             ),
             IconButton(
@@ -89,7 +92,9 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               onPressed: (){
                 final data = Provider.of<GameData>(context, listen: false);
+                final db = Provider.of<AppDatabase>(context, listen: false);
                 data.sleep += 10;
+                data.saveToDatabase(db);
               },
             ),
           ],
@@ -143,7 +148,6 @@ class _SkillBoxState extends State<SkillBox> {
     return Container(
       width: 100,
       height: 100,
-
       decoration: BoxDecoration(border: Border.all(width: 2), color: Colors.grey[300],),
     );
   }

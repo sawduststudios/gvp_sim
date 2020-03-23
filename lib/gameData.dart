@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'database/moor_database.dart';
 
 class GameData with ChangeNotifier {
   int _sleep = 30;
@@ -57,7 +58,34 @@ class GameData with ChangeNotifier {
     }
   }
 
-  void loadDbGameData () {}
+  void loadFromDatabase (AppDatabase db) async{
+    if((await db.getAllGameData()).length == 1) {
+      GameDataSave toLoad = (await db.getAllGameData())[0];
+      _sleep = toLoad.sleep;
+      _money = toLoad.money;
+      _happiness = toLoad.happiness;
+      _peerPopularity = toLoad.peerPopularity;
+      _parentPopularity = toLoad.parentPopularity;
+      _teacherPopularity = toLoad.teacherPopularity;
+    }
+  }
 
-  void saveDbGameData () {}
+  void saveToDatabase (AppDatabase db) async{
+    GameDataSave toSave = GameDataSave(
+      id: 1,
+      sleep: _sleep,
+      money: _money,
+      happiness: _happiness,
+      peerPopularity: _peerPopularity,
+      parentPopularity: _parentPopularity,
+      teacherPopularity: _teacherPopularity,
+    );
+
+    if((await db.getAllGameData()).length == 1) {
+      db.updateGameData(toSave);
+    }
+    else {
+      db.insertGameData(toSave);
+    };
+  }
 }

@@ -6,6 +6,18 @@ part 'moor_database.g.dart';
 
 //===TABULKY===
 
+class GameDataSaves extends Table{
+  IntColumn get id => integer()();
+  IntColumn get sleep => integer().nullable()();
+  IntColumn get money => integer().nullable()();
+  IntColumn get happiness => integer().nullable()();
+  IntColumn get peerPopularity => integer().nullable()();
+  IntColumn get parentPopularity => integer().nullable()();
+  IntColumn get teacherPopularity => integer().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
 
 
 class Events extends Table{
@@ -95,7 +107,7 @@ class IntListConverter extends TypeConverter<List<int>, String> {
 }
 
 //===DATABAZE===
-@UseMoor(tables: [Skills, Events, EventStates])//, daos: [SkillDao, EventDao, EventStateDao])
+@UseMoor(tables: [Skills, Events, EventStates,GameDataSaves])//, daos: [SkillDao, EventDao, EventStateDao])
 class AppDatabase extends _$AppDatabase {
   AppDatabase()
   // Specify the location of the database file
@@ -109,6 +121,11 @@ class AppDatabase extends _$AppDatabase {
   // Migrations will be covered in the next part.
   @override
   int get schemaVersion => 1;
+
+  //Queries pro GameDataSave
+  Future insertGameData (GameDataSave gamedata) => into(gameDataSaves).insert(gamedata);
+  Future updateGameData (GameDataSave gamedata) => update(gameDataSaves).replace(gamedata);
+  Future <List<GameDataSave>> getAllGameData() => select(gameDataSaves).get();
 
   //Queries pro Events
   Future<List<Event>> getAllEvents() => select(events).get();
