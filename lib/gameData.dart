@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'database/moor_database.dart';
 
 class GameData with ChangeNotifier {
-  int _sleep = 30;
+  int _sleep;
   int _money;
   int _happiness;
   int _peerPopularity;
@@ -68,6 +68,7 @@ class GameData with ChangeNotifier {
       _parentPopularity = toLoad.parentPopularity;
       _teacherPopularity = toLoad.teacherPopularity;
     }
+    notifyListeners();
   }
 
   void saveToDatabase (AppDatabase db) async{

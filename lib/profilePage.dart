@@ -78,10 +78,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 size: 30,
               ),
               onPressed: (){
-                final data = Provider.of<GameData>(context, listen: false);
+                final _gameData = Provider.of<GameData>(context, listen: false);
                 final db = Provider.of<AppDatabase>(context, listen: false);
-                data.sleep -= 10;
-                data.saveToDatabase(db);
+                _gameData.sleep -= 10;
+                _gameData.saveToDatabase(db);
               },
             ),
             IconButton(
@@ -91,10 +91,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 size: 30,
               ),
               onPressed: (){
-                final data = Provider.of<GameData>(context, listen: false);
+                final _gameData = Provider.of<GameData>(context, listen: false);
                 final db = Provider.of<AppDatabase>(context, listen: false);
-                data.sleep += 10;
-                data.saveToDatabase(db);
+                _gameData.sleep += 10;
+                _gameData.saveToDatabase(db);
               },
             ),
           ],

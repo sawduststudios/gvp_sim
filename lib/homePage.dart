@@ -54,8 +54,6 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                //AppDatabase db = Provider.of<AppDatabase>(context, listen: false);
-                //GameData.loadFromDatabase(db); todo: nefunguje kvuli static acces
                 Navigator.pushNamed(context, '/ProfilePage');},
             ),
             SizedBox(
