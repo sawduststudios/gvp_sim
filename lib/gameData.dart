@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'database/moor_database.dart';
 
 class GameData with ChangeNotifier {
-  int _sleep;
+  int _sleep = 0;
   int _money;
   int _happiness;
   int _peerPopularity;
@@ -67,6 +67,9 @@ class GameData with ChangeNotifier {
       _peerPopularity = toLoad.peerPopularity;
       _parentPopularity = toLoad.parentPopularity;
       _teacherPopularity = toLoad.teacherPopularity;
+    }
+    else {
+      _sleep = 0;
     }
     notifyListeners();
   }

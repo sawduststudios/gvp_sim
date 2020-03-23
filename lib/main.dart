@@ -17,11 +17,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers:[
         Provider<AppDatabase>(create: (_) => AppDatabase()),
-        ChangeNotifierProvider<GameData>(create: (_) {
-          GameData _gameData = GameData();
-          _gameData.loadFromDatabase(AppDatabase());
-          return _gameData;
-        }),
+        ChangeNotifierProvider<GameData>(create: (_) => GameData()),
       ],
       child: MaterialApp(
         initialRoute: '/',
