@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gvp_sim_db/database/moor_database.dart';
 import 'package:gvp_sim_db/gameData.dart';
 import 'package:provider/provider.dart';
+import 'package:swipedetector/swipedetector.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -38,13 +39,48 @@ class _ProfilePageState extends State<ProfilePage> {
                 padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
                 child: Divider(height: 10.0, thickness: 5, color: Colors.black,),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  SkillBox(),
-                  SkillBox(),
-                  SkillBox(),
-                ],
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Expanded(
+                      child: SwipeDetector(
+                          onSwipeLeft: () {print('left1');},
+                          onSwipeRight: () {print('right1');},
+                          child: SkillBox(),
+                          swipeConfiguration: SwipeConfiguration(
+                              horizontalSwipeMaxHeightThreshold: 10000.0,
+                              horizontalSwipeMinDisplacement: 1.0,
+                              horizontalSwipeMinVelocity:1.0,
+                          ),
+                      ),
+                    ),
+                    Expanded(
+                      child: SwipeDetector(
+                          onSwipeLeft: () {print('left2');},
+                          onSwipeRight: () {print('right2');},
+                          child: SkillBox(),
+                          swipeConfiguration: SwipeConfiguration(
+                              horizontalSwipeMaxHeightThreshold: 10000.0,
+                              horizontalSwipeMinDisplacement: 20.0,
+                              horizontalSwipeMinVelocity:3.0,
+                          ),
+                      ),
+                    ),
+                    Expanded(
+                      child: SwipeDetector(
+                          onSwipeLeft: () {print('left3');},
+                          onSwipeRight: () {print('right3');},
+                          child: SkillBox(),
+                          swipeConfiguration: SwipeConfiguration(
+                              horizontalSwipeMaxHeightThreshold: 10000.0,
+                              horizontalSwipeMinDisplacement: 1.0,
+                              horizontalSwipeMinVelocity:1.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -147,18 +183,52 @@ class SkillBox extends StatefulWidget {
 }
 
 class _SkillBoxState extends State<SkillBox> {
+  int currenth = 0;
+  int maxh = 12;
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
+    return Padding(
         padding:  EdgeInsets.all(5.0),
         child: AspectRatio(
           aspectRatio: 1/1,
           child: Container(
             decoration: BoxDecoration(border: Border.all(width: 2), color: Colors.grey[300],),
+            child:
+              Column(
+                children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0, bottom: 10.0),
+                      child: Text('Jmeno skillu',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                      ),
+                      ),
+                    ),
+
+                  //icona skillu
+                  Expanded(
+                    child: Icon(Icons.account_balance,
+                    size: 50,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0, right: 10.0, bottom: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Text('$currenth'),
+                        Text('/'),
+                        Text('$maxh'),
+
+                      ],
+                    ),
+                  )
+                ],
+              ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
