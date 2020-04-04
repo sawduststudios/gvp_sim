@@ -1,6 +1,14 @@
 import "package:gvp_sim_db/database/moor_database.dart";
+import 'package:gvp_sim_db/buttonData.dart';
+import 'package:gvp_sim_db/event.dart';
+import 'package:gvp_sim_db/eventState.dart';
 
 class DataStorage {
+
+  static const SKILLCOUNT = 9;
+  static const EVENTCOUNT = 2;
+  static const EVENTSTATECOUNT = 4;
+
   static List<Skill> skills = [
     Skill(
       name: "kytara",
@@ -75,17 +83,54 @@ class DataStorage {
       available: true,
     ),
   ];
-
+//todo: tvuj program dela initStateID s malym 'd'
   static List<Event> events = [
     Event(
+      id: 100,
       personName: 'Batman',
       imagePath: 'images/batman.png',
-      initStateId: 0,
+      initStateID: 10011,
     ),
     Event(
+      id: 101,
       personName: 'Kocka',
       imagePath: 'images/kocka.jpg',
-      initStateId: 0,
+      initStateID: 10110,
+    ),
+  ];
+
+  static List<EventState> eventStates = [
+    EventState(
+      id: 10010,
+      sentence: "ten fokin sentence",
+      butt1: ButtonData(text: '1', nextID: 10011),
+      butt2: ButtonData(text: '2', nextID: 10011),
+      butt3: ButtonData(text: '3', nextID: 10011),
+      butt4: ButtonData(text: '4', nextID: 10011),
+    ),
+    EventState(
+      id: 10011,
+      sentence: "OMAE WA MO - SHINDEIRU! NANI?!?!?",
+      butt1: ButtonData(text: 'die', nextID: 10010),
+      butt2: ButtonData(text: 'hard', nextID: 10010),
+      butt3: ButtonData(text: 'harder', nextID: 10010),
+      butt4: ButtonData(text: 'daddy', nextID: 10010),
+    ),
+    EventState(
+      id: 10110,
+      sentence: "Mnau1",
+      butt1: ButtonData(text: 'die', nextID: 10111),
+      butt2: ButtonData(text: 'hard', nextID: 10111),
+      butt3: ButtonData(text: 'harder', nextID: 10111),
+      butt4: ButtonData(text: 'daddy', nextID: 10111),
+    ),
+    EventState(
+      id: 10111,
+      sentence: "Mnau2",
+      butt1: ButtonData(text: 'die', nextID: 10110),
+      butt2: ButtonData(text: 'hard', nextID: 10110),
+      butt3: ButtonData(text: 'harder', nextID: 10110),
+      butt4: ButtonData(text: 'daddy', nextID: 10110),
     ),
   ];
 }

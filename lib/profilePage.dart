@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gvp_sim_db/database/moor_database.dart';
 import 'package:gvp_sim_db/gameData.dart';
 import 'package:provider/provider.dart';
-import 'package:swipedetector/swipedetector.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -17,6 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text('Odpoledne'),
         centerTitle: true,
       ),
+
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(5.0),
@@ -27,47 +27,30 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 300,
                 child: Row(
                   children: <Widget>[
-                    StatBar(
-                      barColor: Colors.blue,
-                    ),
-                    StatBar(
-                      barColor: Colors.red,
-                    ),
-                    StatBar(
-                      barColor: Colors.green,
-                    ),
+                    StatBar(barColor: Colors.blue,),
+                    StatBar(barColor: Colors.red,),
+                    StatBar(barColor: Colors.green,),
                   ],
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
-                child: Divider(
-                  height: 10.0,
-                  thickness: 5,
-                  color: Colors.black,
-                ),
+                child: Divider(height: 10.0, thickness: 5, color: Colors.black,),
               ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Expanded(
-                      child: SkillBox(),
-                    ),
-                    Expanded(
-                      child: SkillBox(),
-                    ),
-                    Expanded(
-                      child: SkillBox(),
-                    ),
-                  ],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  SkillBox(),
+                  SkillBox(),
+                  SkillBox(),
+                ],
               ),
             ],
           ),
         ),
       ),
+
       floatingActionButton: FloatingActionButton(
         child: Icon(
           Icons.check,
@@ -78,7 +61,9 @@ class _ProfilePageState extends State<ProfilePage> {
           Navigator.pushNamed(context, "/Encounter");
         },
       ),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       bottomNavigationBar: BottomAppBar(
         color: Colors.blue,
         shape: CircularNotchedRectangle(),
@@ -93,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: Colors.white,
                 size: 30,
               ),
-              onPressed: () {
+              onPressed: (){
                 final _gameData = Provider.of<GameData>(context, listen: false);
                 final db = Provider.of<AppDatabase>(context, listen: false);
                 _gameData.sleep -= 10;
@@ -106,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: Colors.white,
                 size: 30,
               ),
-              onPressed: () {
+              onPressed: (){
                 final _gameData = Provider.of<GameData>(context, listen: false);
                 final db = Provider.of<AppDatabase>(context, listen: false);
                 _gameData.sleep += 10;
@@ -121,13 +106,14 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class StatBar extends StatefulWidget {
-  StatBar({Key key, this.barColor}) : super(key: key);
+  StatBar({Key key, this.barColor}): super(key: key);
   final Color barColor;
   @override
   _StatBarState createState() => _StatBarState();
 }
 
 class _StatBarState extends State<StatBar> {
+
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<GameData>(context);
@@ -135,100 +121,41 @@ class _StatBarState extends State<StatBar> {
     return AspectRatio(
       aspectRatio: 1 / 5,
       child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(width: 5)),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(width: 5)),
           child: Column(
             children: <Widget>[
               Flexible(
                   flex: 100 - barFlex,
-                  child: Container(
-                    color: Colors.grey,
-                  )),
-              Flexible(flex: barFlex, child: Container(color: widget.barColor))
+                  child: Container(color: Colors.grey,)),
+              Flexible(
+                  flex: barFlex,
+                  child: Container(color: widget.barColor))
+
             ],
-          )),
+          )
+      ),
     );
   }
 }
 
-//TODO: aby se to stavělo ze skillu
-
+//todo: SkillBox layout těch widgetů
+//todo: Gesture detector pro horizontal swipe
+//todo: SkillName bude uložen v gameloop
 class SkillBox extends StatefulWidget {
   @override
   _SkillBoxState createState() => _SkillBoxState();
 }
 
 class _SkillBoxState extends State<SkillBox> {
-  int currenth = 0;
-  int maxh = 12;
   @override
   Widget build(BuildContext context) {
-    return SwipeDetector(
-      onSwipeLeft: () {
-        if (currenth > 0) {
-          setState(() {
-            currenth -= 1;
-          });
-        }
-      },
-      onSwipeRight: () {
-        if (currenth < maxh) {
-          setState(() {
-            currenth += 1;
-          });
-        }
-      },
-      swipeConfiguration: SwipeConfiguration(
-        horizontalSwipeMaxHeightThreshold: 10000.0,
-        horizontalSwipeMinDisplacement: 1.0,
-        horizontalSwipeMinVelocity: 1.0,
-      ),
+    return Expanded(
       child: Padding(
-        padding: EdgeInsets.all(5.0),
+        padding:  EdgeInsets.all(5.0),
         child: AspectRatio(
-          aspectRatio: 1 / 1,
+          aspectRatio: 1/1,
           child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(width: 2),
-              color: Colors.grey[300],
-            ),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10.0, top: 5.0, right: 10.0, bottom: 10.0),
-                  child: Text(
-                    'Jmeno skillu',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                    ),
-                  ),
-                ),
-
-                //icona skillu
-                Expanded(
-                  child: Icon(
-                    Icons.account_balance,
-                    size: 50,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 10.0, right: 10.0, bottom: 5.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Text('$currenth'),
-                      Text('/'),
-                      Text('$maxh'),
-                    ],
-                  ),
-                )
-              ],
-            ),
+            decoration: BoxDecoration(border: Border.all(width: 2), color: Colors.grey[300],),
           ),
         ),
       ),

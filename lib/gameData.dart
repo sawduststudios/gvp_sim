@@ -92,6 +92,6 @@ class GameData with ChangeNotifier {
     }
     else {
       db.insertGameData(toSave);
-    };
+    }
   }
 }
