@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gvp_sim_db/database/moor_database.dart';
 import 'package:gvp_sim_db/buttonData.dart';
+import 'package:gvp_sim_db/gameData.dart';
+import 'database/dataStorage.dart';
+import 'dart:math';
+import 'event.dart';
+import 'eventState.dart';
+import 'package:provider/provider.dart';
 
 class Encounter extends StatefulWidget {
   @override
@@ -8,109 +13,112 @@ class Encounter extends StatefulWidget {
 }
 
 class _State extends State<Encounter> {
-  Event _currentEvent = Event(
-    //Event({this.personName, this.imagePath, this.initStateID, this.allStates})
-      personName: 'Batman',
-      imagePath: 'images/batman.png',
-      initStateId: 0,
-  );
-  Map<int, EventState> _allEventStates = {
-    0: EventState(
-      sentence: "NA NA NA NA NA NA NA NA BATMAAAAAAN",
-      butt1: ButtonData(text: 'Jedna', nextID: 1),
-      butt2: ButtonData(text: 'Dva', nextID: 1),
-      butt3: ButtonData(text: 'Tri', nextID: 1),
-      butt4: ButtonData(text: 'Ctyri', nextID: 1),
-    ),
-    1: EventState(
-      sentence: "OMAE WA MO - SHINDEIRU! NANI?!?!?",
-      butt1: ButtonData(text: 'die', nextID: 0),
-      butt2: ButtonData(text: 'hard', nextID: 0),
-      butt3: ButtonData(text: 'harder', nextID: 0),
-      butt4: ButtonData(text: 'daddy', nextID: 0),
-    )
-  };
-  EventState _currentState;
+  Event _currentEvent;
 
   @override
   Widget build(BuildContext context) {
+    _currentEvent =
+        DataStorage.events[new Random().nextInt(DataStorage.EVENTCOUNT)];
 
+    return Dialogue(firstEvent: _currentEvent);
+  }
+}
+
+class Dialogue extends StatefulWidget {
+  Dialogue({Key key, this.firstEvent}) : super(key: key);
+  Event firstEvent;
+  @override
+  _DialogueState createState() => _DialogueState();
+}
+
+class _DialogueState extends State<Dialogue> {
+  EventState _currentState;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentState = (DataStorage.eventStates
+        .singleWhere((f) => f.id == widget.firstEvent.initStateID));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     void _advance(ButtonData data) {
+      final _newState =
+          (DataStorage.eventStates.singleWhere((f) => f.id == data.nextID));
       setState(() {
-        _currentState = _allEventStates[data.nextID];
-        print(data.text);//tady se muze delat cokoli s informacema od ButtonData
+        _currentState = _newState;
       });
     }
 
     return SafeArea(
         child: Container(
-          color: Colors.white,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                _currentEvent.personName,
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            widget.firstEvent.personName,
+            style: TextStyle(
+              fontSize: 26,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.none,
+            ),
+          ),
+          Image.asset(
+            widget.firstEvent.imagePath,
+            height: 300,
+          ),
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4.0),
+                border: Border.all(width: 2.0, color: Colors.black)),
+            child: Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Text(
+                _currentState.sentence,
                 style: TextStyle(
-                  fontSize: 26,
+                  fontSize: 18,
                   color: Colors.black,
-                  fontWeight: FontWeight.bold,
                   decoration: TextDecoration.none,
                 ),
               ),
-              Image.asset(
-                '${_currentEvent.imagePath}',
-                height: 300,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4.0),
-                    border: Border.all(width: 2.0, color: Colors.black)
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Text(
-                    _currentState.sentence,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                ),
-              ),
-              Table(
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            ),
+          ),
+          Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            children: [
+              TableRow(
                 children: [
-                  TableRow(
-                    children: [
-                      ReactionButton(
-                        source: _currentState.butt1,
-                        advance: _advance,
-                      ),
-                      ReactionButton(
-                        source: _currentState.butt2,
-                        advance: _advance,
-                      ),
-                    ],
+                  ReactionButton(
+                    source: _currentState.butt1,
+                    advance: _advance,
                   ),
-                  TableRow(
-                    children: [
-                      ReactionButton(
-                        source: _currentState.butt3,
-                        advance: _advance,
-                      ),
-                      ReactionButton(
-                        source: _currentState.butt4,
-                        advance: _advance,
-                      ),
-                    ],
+                  ReactionButton(
+                    source: _currentState.butt2,
+                    advance: _advance,
                   ),
                 ],
-              )
+              ),
+              TableRow(
+                children: [
+                  ReactionButton(
+                    source: _currentState.butt3,
+                    advance: _advance,
+                  ),
+                  ReactionButton(
+                    source: _currentState.butt4,
+                    advance: _advance,
+                  ),
+                ],
+              ),
             ],
-          ),
-        ));
+          )
+        ],
+      ),
+    ));
   }
 }
 
@@ -119,8 +127,35 @@ class ReactionButton extends StatelessWidget {
   final Function advance;
   final ButtonData source;
 
+
   @override
   Widget build(BuildContext context) {
+    void updateStats(Map changeList) {
+      GameData gameData = Provider.of<GameData>(context, listen: false);
+      changeList.keys.forEach((key) {
+        switch (key) {
+          case 'sleep':
+            gameData.sleep += changeList[key];
+            break;
+          case 'money':
+            gameData.money += changeList[key];
+            break;
+          case 'happiness':
+            gameData.happiness += changeList[key];
+            break;
+          case 'peerPopulariy':
+            gameData.peerPopularity += changeList[key];
+            break;
+          case 'parentPopularity':
+            gameData.parentPopularity += changeList[key];
+            break;
+          case 'teacherPopularity':
+            gameData.teacherPopularity += changeList[key];
+            break;
+        }
+      });
+    }
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.0),
       child: FlatButton(
@@ -130,7 +165,11 @@ class ReactionButton extends StatelessWidget {
           source.text,
         ),
         onPressed: () {
+          GameData gameData = Provider.of<GameData>(context, listen: false);
+          print(source.effects['happiness']);
           advance(source);
+          updateStats(source.effects);
+          print(gameData.happiness);
         },
       ),
     );

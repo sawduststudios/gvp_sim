@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
                 icon: Icon(
                     Icons.settings
                 ),
-                onPressed: (){},
+                onPressed: () {print('settings clicked');},
               )
             ],
           )
@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
                 GameData _gameData = Provider.of<GameData>(context, listen: false);
                 //_gameData.sleep = 30;
                 _gameData.loadFromDatabase(db);
-                Navigator.pushNamed(context, '/ProfilePage');},
+                Navigator.pushNamed(context, '/Encounter');},
             ),
             SizedBox(
               height: 30,
@@ -73,11 +73,9 @@ class HomePage extends StatelessWidget {
               ),
               onPressed: () async {
                 final database = Provider.of<AppDatabase>(context, listen:false);
-                final eventsCount = (await database.getAllEvents()).length;
-                final eventStatesCount = (await database.getAllEventStates()).length;
                 final skillsCount = (await database.getAllSkills()).length;
-                if(eventsCount != 0 || eventStatesCount != 0 || skillsCount != 9) {
-                  print('Database corrupted');
+                if(skillsCount != DataStorage.SKILLCOUNT) {
+                  print('Filling skills');
                   dumpSkills(database);
                 }
                 Navigator.pushNamed(context, '/SkillPage');
@@ -90,8 +88,7 @@ class HomePage extends StatelessWidget {
   }
 
   void dumpSkills(AppDatabase db) {
-    List<Skill> allSkills = DataStorage.skills;
-    for(Skill i in allSkills) {
+    for(Skill i in DataStorage.skills) {
       db.insertSkill(i);
     }
   }
