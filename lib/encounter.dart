@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gvp_sim_db/EncounterEnd.dart';
 import 'package:gvp_sim_db/buttonData.dart';
 import 'package:gvp_sim_db/gameData.dart';
 import 'database/dataStorage.dart';
@@ -44,11 +45,22 @@ class _DialogueState extends State<Dialogue> {
   @override
   Widget build(BuildContext context) {
     void _advance(ButtonData data) {
-      final _newState =
-          (DataStorage.eventStates.singleWhere((f) => f.id == data.nextID));
-      setState(() {
-        _currentState = _newState;
-      });
+      if (data.isFinal) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => EncounterEnd(
+                      currentEvent: widget.firstEvent,
+                      sentence: data.finalSentence,
+                    )
+            ));
+      } else {
+        final _newState =
+            (DataStorage.eventStates.singleWhere((f) => f.id == data.nextID));
+        setState(() {
+          _currentState = _newState;
+        });
+      }
     }
 
     return SafeArea(
@@ -127,7 +139,6 @@ class ReactionButton extends StatelessWidget {
   final Function advance;
   final ButtonData source;
 
-
   @override
   Widget build(BuildContext context) {
     void updateStats(Map changeList) {
@@ -165,11 +176,8 @@ class ReactionButton extends StatelessWidget {
           source.text,
         ),
         onPressed: () {
-          GameData gameData = Provider.of<GameData>(context, listen: false);
-          print(source.effects['happiness']);
-          advance(source);
           updateStats(source.effects);
-          print(gameData.happiness);
+          advance(source);
         },
       ),
     );

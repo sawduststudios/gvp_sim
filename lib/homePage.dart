@@ -78,7 +78,7 @@ class HomePage extends StatelessWidget {
                   print('Filling skills');
                   dumpSkills(database);
                 }
-                Navigator.pushNamed(context, '/SkillPage');
+                Navigator.pushNamed(context, '/ProfilePage');
                 },
             ),
           ],

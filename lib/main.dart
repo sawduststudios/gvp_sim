@@ -4,8 +4,10 @@ import 'package:gvp_sim_db/gameData.dart';
 import 'package:gvp_sim_db/homePage.dart';
 import 'package:gvp_sim_db/profilePage.dart';
 import 'package:gvp_sim_db/skill_page.dart';
+import 'package:moor_flutter/moor_flutter.dart';
 import 'package:provider/provider.dart';
 import 'database/moor_database.dart';
+import 'package:gvp_sim_db/EncounterEnd.dart';
 
 //todo: Zprovoznit celý gameloop
 void main() => runApp(MyApp());
