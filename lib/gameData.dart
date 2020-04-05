@@ -5,11 +5,11 @@ import 'database/moor_database.dart';
 //todo: uložit jména skillů ve skillboxu
 class GameData with ChangeNotifier {
   int _sleep = 0;
-  int _money;
-  int _happiness;
-  int _peerPopularity;
-  int _parentPopularity;
-  int _teacherPopularity;
+  int _money = 0;
+  int _happiness = 50;
+  int _peerPopularity = 0;
+  int _parentPopularity = 0;
+  int _teacherPopularity = 0;
 
   int get sleep => _sleep;
   int get money => _money;
@@ -18,6 +18,8 @@ class GameData with ChangeNotifier {
   int get parentPopularity => _parentPopularity;
   int get teacherPopularity => _teacherPopularity;
 
+
+  //todo: Pokud neco klesne pod 0: GAME OVER BITCH
   set sleep(int newValue) {
     if(newValue != _sleep && 0 <= newValue && newValue <= 100) {
       _sleep = newValue;

@@ -111,7 +111,7 @@ class DataStorage {
     EventState(
       id: 10011,
       sentence: "OMAE WA MO - SHINDEIRU! NANI?!?!?",
-      butt1: ButtonData(text: 'die', nextID: 10010),
+      butt1: ButtonData(text: 'die', nextID: 10010, effects: {'happiness': -5, }),
       butt2: ButtonData(text: 'hard', nextID: 10010),
       butt3: ButtonData(text: 'harder', nextID: 10010),
       butt4: ButtonData(text: 'daddy', nextID: 10010),

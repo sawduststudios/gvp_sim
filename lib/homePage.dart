@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
                 icon: Icon(
                     Icons.settings
                 ),
-                onPressed: (){print('settings clicked');},
+                onPressed: () {print('settings clicked');},
               )
             ],
           )

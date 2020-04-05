@@ -9,5 +9,6 @@ class EventState {
   String sentence;
   bool isFinal;
 
+
   EventState({this.sentence, this.butt1, this.butt2, this.butt3, this.butt4, this.isFinal = false, this.id});
 }
