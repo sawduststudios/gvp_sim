@@ -27,9 +27,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 300,
                 child: Row(
                   children: <Widget>[
-                    StatBar(barColor: Colors.blue,),
-                    StatBar(barColor: Colors.red,),
-                    StatBar(barColor: Colors.green,),
+                    StatBar(barColor: Colors.blue, shownStat: 'sleep'),
+                    StatBar(barColor: Colors.red, shownStat: 'money'),
+                    StatBar(barColor: Colors.green, shownStat: 'happiness'),
+                    TripleStatBar(barColor1: Colors.blue,
+                      barColor2: Colors.red, barColor3: Colors.green,),
                   ],
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 ),
@@ -58,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         backgroundColor: Colors.blue[900],
         onPressed: () {
-          Navigator.pushNamed(context, "/Encounter");
+          Navigator.pushReplacementNamed(context, "/Encounter");
         },
       ),
 
@@ -92,10 +94,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 size: 30,
               ),
               onPressed: (){
-                final _gameData = Provider.of<GameData>(context, listen: false);
-                final db = Provider.of<AppDatabase>(context, listen: false);
-                _gameData.sleep += 10;
-                _gameData.saveToDatabase(db);
+                //TODO resetovat hodiny
+                Navigator.pushNamed(context, "/SkillPage");
               },
             ),
           ],
@@ -106,8 +106,10 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class StatBar extends StatefulWidget {
-  StatBar({Key key, this.barColor}): super(key: key);
+  StatBar({Key key, this.barColor, this.shownStat}): super(key: key);
   final Color barColor;
+  final String shownStat;
+
   @override
   _StatBarState createState() => _StatBarState();
 }
@@ -117,7 +119,22 @@ class _StatBarState extends State<StatBar> {
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<GameData>(context);
-    int barFlex = data.sleep;
+    int barFlex;
+    switch(widget.shownStat) {
+      case('sleep'):
+        barFlex = data.sleep;
+        break;
+      case('money'):
+        barFlex = data.money;
+        break;
+      case('happiness'):
+        barFlex = data.happiness;
+        break;
+      default:
+        barFlex = data.sleep;
+        print('Posral jsi to, Statbar ma spatnej argument');
+    }
+
     return AspectRatio(
       aspectRatio: 1 / 5,
       child: Container(
@@ -131,6 +148,49 @@ class _StatBarState extends State<StatBar> {
                   flex: barFlex,
                   child: Container(color: widget.barColor))
 
+            ],
+          )
+      ),
+    );
+  }
+}
+
+class TripleStatBar extends StatefulWidget {
+  TripleStatBar({Key key, this.barColor1, this.barColor2, this.barColor3,}): super(key: key);
+  final Color barColor1;
+  final Color barColor2;
+  final Color barColor3;
+
+  @override
+  _TripleStatBarState createState() => _TripleStatBarState();
+}
+
+class _TripleStatBarState extends State<TripleStatBar> {
+
+  @override
+  Widget build(BuildContext context) {
+    final data = Provider.of<GameData>(context);
+    int barFlex1 = data.peerPopularity;
+    int barFlex2 = data.parentPopularity;
+    int barFlex3 = data.teacherPopularity;
+    return AspectRatio(
+      aspectRatio: 1 / 5,
+      child: Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(width: 5)),
+          child: Column(
+            children: <Widget>[
+              Flexible(
+                  flex: 100 - barFlex1 - barFlex2 - barFlex3,
+                  child: Container(color: Colors.grey,)),
+              Flexible(
+                  flex: barFlex1,
+                  child: Container(color: widget.barColor1)),
+              Flexible(
+                  flex: barFlex2,
+                  child: Container(color: widget.barColor2)),
+              Flexible(
+                  flex: barFlex3,
+                  child: Container(color: widget.barColor3))
             ],
           )
       ),

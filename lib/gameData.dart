@@ -4,12 +4,27 @@ import 'database/moor_database.dart';
 
 //todo: uložit jména skillů ve skillboxu
 class GameData with ChangeNotifier {
-  int _sleep = 0;
-  int _money = 0;
+
+  Map currentChanges = {'sleep': 0, 'money': 0, 'happiness': 0,
+    'peerPopularity': 0,'parentPopularity': 0,'teacherPopularity': 0};
+
+  int _hours = 0;
+
+  int get hours => _hours;
+
+  set hours(int newValue) {
+    if(newValue != _hours && newValue <= 24) {
+      _hours = newValue;
+      notifyListeners();
+    }
+  }
+
+  int _sleep = 10;
+  int _money = 20;
   int _happiness = 50;
-  int _peerPopularity = 0;
-  int _parentPopularity = 0;
-  int _teacherPopularity = 0;
+  int _peerPopularity = 10;
+  int _parentPopularity = 20;
+  int _teacherPopularity = 30;
 
   int get sleep => _sleep;
   int get money => _money;
@@ -17,7 +32,6 @@ class GameData with ChangeNotifier {
   int get peerPopularity => _peerPopularity;
   int get parentPopularity => _parentPopularity;
   int get teacherPopularity => _teacherPopularity;
-
 
   //todo: Pokud neco klesne pod 0: GAME OVER BITCH
   set sleep(int newValue) {
@@ -42,21 +56,21 @@ class GameData with ChangeNotifier {
   }
 
   set peerPopularity(int newValue) {
-    if(newValue != _peerPopularity && 0 <= newValue && newValue <= 100) {
+    if(newValue != _peerPopularity && 0 <= newValue && (newValue + _parentPopularity + _teacherPopularity) <= 100) {
       _peerPopularity = newValue;
     notifyListeners();
     }
   }
 
   set parentPopularity(int newValue) {
-    if(newValue != _parentPopularity && 0 <= newValue && newValue <= 100) {
+    if(newValue != _parentPopularity && 0 <= newValue && (newValue + _peerPopularity + _teacherPopularity) <= 100) {
       _parentPopularity = newValue;
     notifyListeners();
     }
   }
 
   set teacherPopularity(int newValue) {
-    if(newValue != _teacherPopularity && 0 <= newValue && newValue <= 100) {
+    if(newValue != _teacherPopularity && 0 <= newValue && (newValue + _parentPopularity + _peerPopularity) <= 100) {
       _teacherPopularity = newValue;
     notifyListeners();
     }

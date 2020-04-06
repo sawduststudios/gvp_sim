@@ -147,21 +147,27 @@ class ReactionButton extends StatelessWidget {
         switch (key) {
           case 'sleep':
             gameData.sleep += changeList[key];
+            gameData.currentChanges['sleep'] += changeList[key];
             break;
           case 'money':
             gameData.money += changeList[key];
+            gameData.currentChanges['money'] += changeList[key];
             break;
           case 'happiness':
             gameData.happiness += changeList[key];
+            gameData.currentChanges['happiness'] += changeList[key];
             break;
           case 'peerPopulariy':
             gameData.peerPopularity += changeList[key];
+            gameData.currentChanges['peerPopularity'] += changeList[key];
             break;
           case 'parentPopularity':
             gameData.parentPopularity += changeList[key];
+            gameData.currentChanges['parentPopularity'] += changeList[key];
             break;
           case 'teacherPopularity':
             gameData.teacherPopularity += changeList[key];
+            gameData.currentChanges['teacherPopularity'] += changeList[key];
             break;
         }
       });
