@@ -13,18 +13,7 @@ class GameData with ChangeNotifier {
     'skillsUnlocked' : [],
   };
 
-  int _hours = 0;
-
-  int get hours => _hours;
-
-  set hours(int newValue) {
-    if (newValue != _hours && newValue <= 24) {
-      _hours = newValue;
-      notifyListeners();
-    }
-  }
-
-  int _sleep = 10;
+  int _sleep = 50;
   int _money = 20;
   int _happiness = 50;
   int _peerPopularity = 10;
@@ -32,12 +21,12 @@ class GameData with ChangeNotifier {
   int _teacherPopularity = 30;
   List<Skill> _activeSkills = [
     Skill(
-        name: 'dummy skill',
+        name: 'test skill',
         iconName: 'dummyicon',
         available: true,
         currentHours: 0,
         currentLevel: 0,
-        levelUp: [0]),
+        levelUp: [6]),
     Skill(
         name: 'dummy skill',
         iconName: 'dummyicon',
@@ -53,6 +42,8 @@ class GameData with ChangeNotifier {
         currentLevel: 0,
         levelUp: [0])
   ];
+  int _dailyHours = 0;
+
 
   int get sleep => _sleep;
   int get money => _money;
@@ -60,19 +51,12 @@ class GameData with ChangeNotifier {
   int get peerPopularity => _peerPopularity;
   int get parentPopularity => _parentPopularity;
   int get teacherPopularity => _teacherPopularity;
-
   List<Skill> get activeSkills => _activeSkills;
-
-  set activeSkills(List<Skill> newValue) {
-    if (newValue != _activeSkills) {
-      _activeSkills = newValue;
-      notifyListeners();
-    }
-  }
+  int get dailyHours => _dailyHours;
 
   //todo: Pokud neco klesne pod 0: GAME OVER BITCH
   set sleep(int newValue) {
-    if (newValue != _sleep && 0 <= newValue && newValue <= 100) {
+    if (newValue != _sleep) {
       _sleep = newValue;
       notifyListeners();
     }
@@ -119,8 +103,34 @@ class GameData with ChangeNotifier {
     }
   }
 
+  set activeSkills(List<Skill> newValue) {
+    if(newValue != _activeSkills) {
+      _activeSkills = newValue;
+      notifyListeners();
+    }
+  }
+
+  set dailyHours(int newValue) {
+    if (newValue != _dailyHours && newValue >= -8) {
+
+      if(newValue < _dailyHours) {
+        sleep -= 10*(_dailyHours - newValue);
+      }
+      else {
+        sleep += 10*(newValue - _dailyHours);
+      }
+      _dailyHours = newValue;
+      notifyListeners();
+    }
+  }
+
+  void resetDailyHours() {
+    _dailyHours = 0;
+  }
+
   void loadFromDatabase(AppDatabase db) async {
     if ((await db.getAllGameData()).length == 1) {
+      print("Loading gameData from database");
       GameDataSave toLoad = (await db.getAllGameData())[0];
       _sleep = toLoad.sleep;
       _money = toLoad.money;

@@ -181,8 +181,7 @@ class ReactionButton extends StatelessWidget {
       if (unlock != 'none') {
         Skill loadedSkill = await db.skillById(unlock);
         if (loadedSkill.available == false) {
-        Skill toUpdate = Skill(name: loadedSkill.name, iconName: loadedSkill.iconName, currentLevel: loadedSkill.currentLevel, currentHours: loadedSkill.currentHours, levelUp: loadedSkill.levelUp, available: true);
-        db.updateSkill(toUpdate);
+        db.updateSkill(loadedSkill.copyWith(available: true));
         gameData.currentChanges['skillsUnlocked'].add(unlock);
         print('$unlock skill unlocked');}
       }
@@ -210,14 +209,14 @@ class ReactionButton extends StatelessWidget {
             advance(source);
           }
           else{
-          bool isOk = await reqMet(source);
-          if (isOk) {
-          applyEffects(source.effects, source.unlocksSkill);
-          advance(source);}
-          else{
-            Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text("Nemas ${source.requirements[0]} na urovni ${source.requirements[1]}"),
-            ),);
+            bool isOk = await reqMet(source);
+            if (isOk) {
+              applyEffects(source.effects, source.unlocksSkill);
+              advance(source);}
+            else{
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text("Nemas ${source.requirements[0]} na urovni ${source.requirements[1]}"),
+              ),);
           }}
         },
       ),

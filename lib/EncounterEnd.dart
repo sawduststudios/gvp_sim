@@ -10,8 +10,20 @@ class EncounterEnd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GameData gamedata = Provider.of<GameData>(context, listen: false);
 
+    void EncounterSubmit() {
+      GameData gameData = Provider.of<GameData>(context, listen: false);
+      gameData.resetDailyHours();
+      print(gameData.sleep);
+      gameData.dailyHours = 5;
+      print(gameData.sleep);
+      gameData.currentChanges = {'sleep': 0, 'money': 0, 'happiness': 0,
+        'peerPopularity': 0,'parentPopularity': 0,'teacherPopularity': 0, 'skillsUnlocked': []};
+      gameData.saveToDatabase(Provider.of<AppDatabase>(context, listen: false));
+      Navigator.pushNamedAndRemoveUntil(context, "/ProfilePage", ModalRoute.withName("/"));
+    }
+
+    GameData gameData = Provider.of<GameData>(context, listen: false);
     return SafeArea(
         child: Container(
           color: Colors.white,
@@ -55,7 +67,7 @@ class EncounterEnd extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(5.0),
                   child: Text(
-                    "Tvoje staty se změnily o:\nSleep: ${gamedata.currentChanges['sleep']} Money: ${gamedata.currentChanges['money']}\nHappiness: ${gamedata.currentChanges['happiness']} PeerPop: ${gamedata.currentChanges['peerPopularity']}\nParentPop: ${gamedata.currentChanges['parentPopularity']} TeacherPop: ${gamedata.currentChanges['teacherPopularity']}. Odemkl jsi skill ${gamedata.currentChanges['skillsUnlocked']}",
+                    "Tvoje staty se změnily o:\nSleep: ${gameData.currentChanges['sleep']} Money: ${gameData.currentChanges['money']}\nHappiness: ${gameData.currentChanges['happiness']} PeerPop: ${gameData.currentChanges['peerPopularity']}\nParentPop: ${gameData.currentChanges['parentPopularity']} TeacherPop: ${gameData.currentChanges['teacherPopularity']}. Odemkl jsi skill ${gameData.currentChanges['skillsUnlocked']}",
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.black,
@@ -71,11 +83,7 @@ class EncounterEnd extends StatelessWidget {
                 backgroundColor: Colors.blue[900],
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                 onPressed: () {
-                  GameData gameData = Provider.of<GameData>(context, listen: false);
-                  gameData.saveToDatabase(Provider.of<AppDatabase>(context, listen: false));
-                  gamedata.currentChanges = {'sleep': 0, 'money': 0, 'happiness': 0,
-                    'peerPopularity': 0,'parentPopularity': 0,'teacherPopularity': 0};
-                  Navigator.pushNamedAndRemoveUntil(context, "/ProfilePage", ModalRoute.withName("/"));
+                  EncounterSubmit();
                 },
               ),
             ],

@@ -10,9 +10,24 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+  void ProfilePageSubmit() {
+    GameData gameData = Provider.of<GameData>(context, listen: false);
+    if(gameData.sleep <= 0) {
+      print('GAME OVER, usnul jsi');
+    }
+    else {
+      if(gameData.sleep > 100) {
+        gameData.sleep = 100;
+      }
+      gameData.saveToDatabase(Provider.of<AppDatabase>(context, listen: false));
+      Navigator.pushReplacementNamed(context, "/Encounter");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    GameData _gameData = Provider.of<GameData>(context, listen: true);
+    GameData gameData = Provider.of<GameData>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         title: Text('Odpoledne'),
@@ -41,27 +56,28 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
-                child: Divider(
-                  height: 10.0,
-                  thickness: 5,
-                  color: Colors.black,
-                ),
+                  padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+                  child: Center(
+                      child: Text(
+                        '${gameData.dailyHours}',
+                        style: TextStyle(fontSize: 30),
+                      )
+                  )
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Expanded(
                       child: SkillBox(
-                    activeSkill: _gameData.activeSkills[0],
+                    activeSkillSlot: 0,
                   )),
                   Expanded(
                       child: SkillBox(
-                    activeSkill: _gameData.activeSkills[1],
+                    activeSkillSlot: 1,
                   )),
                   Expanded(
                       child: SkillBox(
-                    activeSkill: _gameData.activeSkills[2],
+                    activeSkillSlot: 2,
                   )),
                 ],
               ),
@@ -76,8 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         backgroundColor: Colors.blue[900],
         onPressed: () {
-          Provider.of<GameData>(context, listen: false).saveToDatabase(Provider.of<AppDatabase>(context, listen: false));
-          Navigator.pushReplacementNamed(context, "/Encounter");
+          ProfilePageSubmit();
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -130,13 +145,24 @@ class StatBar extends StatefulWidget {
 }
 
 class _StatBarState extends State<StatBar> {
+
   @override
   Widget build(BuildContext context) {
-    final data = Provider.of<GameData>(context);
+    Color barColor = widget.barColor;
+    final data = Provider.of<GameData>(context, listen: true);
     int barFlex;
     switch (widget.shownStat) {
       case ('sleep'):
-        barFlex = data.sleep;
+        if(data.sleep <= 0) {
+          barFlex = 2;
+          barColor = Colors.red;
+        }
+        else if(data.sleep > 100) {
+          barFlex = 100;
+        }
+        else {
+          barFlex = data.sleep;
+        }
         break;
       case ('money'):
         barFlex = data.money;
@@ -162,7 +188,7 @@ class _StatBarState extends State<StatBar> {
                   child: Container(
                     color: Colors.grey,
                   )),
-              Flexible(flex: barFlex, child: Container(color: widget.barColor))
+              Flexible(flex: barFlex, child: Container(color: barColor))
             ],
           )),
     );
@@ -217,36 +243,51 @@ class _TripleStatBarState extends State<TripleStatBar> {
 }
 
 class SkillBox extends StatefulWidget {
-  SkillBox({Key key, this.activeSkill}) : super(key: key);
-  Skill activeSkill;
+  SkillBox({Key key, this.activeSkillSlot}) : super(key: key);
+  final activeSkillSlot;
   @override
   _SkillBoxState createState() => _SkillBoxState();
 }
 
 class _SkillBoxState extends State<SkillBox> {
-  int currenth;
-  int maxh;
+  //int currentHours;
+  //int maxHours;
+  //GameData gameData;
+  //Skill activeSkill;
+
   @override
   void initState() {
     super.initState();
-    currenth = widget.activeSkill.currentHours;
-    maxh = widget.activeSkill.levelUp[widget.activeSkill.currentLevel];
+    //currenth = currentHours;
+    //maxh = widget.activeSkill.levelUp[widget.activeSkill.currentLevel];
   }
 
   @override
   Widget build(BuildContext context) {
-    return SwipeDetector( //todo: moznost dat podminku co misto dummyskillu ukaze prazdno
+    final gameData = Provider.of<GameData>(context, listen: false);
+    Skill activeSkill = gameData.activeSkills[widget.activeSkillSlot];
+    return SwipeDetector(
+      //todo: moznost dat podminku co misto dummyskillu ukaze prazdno
       onSwipeLeft: () {
-        if (currenth > 0) {
+        if (activeSkill.currentHours > 0) {
           setState(() {
-            currenth -= 1;
+            int newHours = activeSkill.currentHours - 1;
+            gameData.activeSkills[widget.activeSkillSlot] =
+                activeSkill.copyWith(currentHours: newHours);
+            gameData.dailyHours += 1;
+            print('odecitam hodiny');
           });
         }
       },
       onSwipeRight: () {
-        if (currenth < maxh) {
+        if (activeSkill.currentHours <
+            activeSkill.levelUp[activeSkill.currentLevel]) {
           setState(() {
-            currenth += 1;
+            int newHours = activeSkill.currentHours + 1;
+            gameData.activeSkills[widget.activeSkillSlot] =
+                activeSkill.copyWith(currentHours: newHours);
+            gameData.dailyHours -= 1;
+            print('pricitam hodiny');
           });
         }
       },
@@ -270,7 +311,7 @@ class _SkillBoxState extends State<SkillBox> {
                   padding: const EdgeInsets.only(
                       left: 10.0, top: 5.0, right: 10.0, bottom: 10.0),
                   child: Text(
-                    widget.activeSkill.name,
+                    activeSkill.name,
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -292,9 +333,9 @@ class _SkillBoxState extends State<SkillBox> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Text('$currenth'),
+                      Text('${activeSkill.currentHours}'),
                       Text('/'),
-                      Text('$maxh'),
+                      Text('${activeSkill.levelUp[activeSkill.currentLevel]}'),
                     ],
                   ),
                 )

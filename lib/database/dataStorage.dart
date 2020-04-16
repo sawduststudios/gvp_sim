@@ -122,7 +122,7 @@ class DataStorage {
       butt1: ButtonData(text: 'PingPong', nextID: 10111, unlocksSkill: "PingPong"),
       butt2: ButtonData(text: 'sikana', nextID: 10111, unlocksSkill: "sikana"),
       butt3: ButtonData(text: 'harder', nextID: 10111),
-      butt4: ButtonData(text: 'daddy', nextID: 10111),
+      butt4: ButtonData(text: 'final', nextID: 10111, isFinal: true, finalSentence: "Mnau is done"),
     ),
     EventState(
       id: 10111,
