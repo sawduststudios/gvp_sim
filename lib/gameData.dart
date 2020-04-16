@@ -1,19 +1,24 @@
 import 'package:flutter/foundation.dart';
 import 'database/moor_database.dart';
 
-
 //todo: uložit jména skillů ve skillboxu
 class GameData with ChangeNotifier {
-
-  Map currentChanges = {'sleep': 0, 'money': 0, 'happiness': 0,
-    'peerPopularity': 0,'parentPopularity': 0,'teacherPopularity': 0};
+  Map currentChanges = {
+    'sleep': 0,
+    'money': 0,
+    'happiness': 0,
+    'peerPopularity': 0,
+    'parentPopularity': 0,
+    'teacherPopularity': 0,
+    'skillsUnlocked' : [],
+  };
 
   int _hours = 0;
 
   int get hours => _hours;
 
   set hours(int newValue) {
-    if(newValue != _hours && newValue <= 24) {
+    if (newValue != _hours && newValue <= 24) {
       _hours = newValue;
       notifyListeners();
     }
@@ -25,6 +30,29 @@ class GameData with ChangeNotifier {
   int _peerPopularity = 10;
   int _parentPopularity = 20;
   int _teacherPopularity = 30;
+  List<Skill> _activeSkills = [
+    Skill(
+        name: 'dummy skill',
+        iconName: 'dummyicon',
+        available: true,
+        currentHours: 0,
+        currentLevel: 0,
+        levelUp: [0]),
+    Skill(
+        name: 'dummy skill',
+        iconName: 'dummyicon',
+        available: true,
+        currentHours: 0,
+        currentLevel: 0,
+        levelUp: [0]),
+    Skill(
+        name: 'dummy skill',
+        iconName: 'dummyicon',
+        available: true,
+        currentHours: 0,
+        currentLevel: 0,
+        levelUp: [0])
+  ];
 
   int get sleep => _sleep;
   int get money => _money;
@@ -33,51 +61,66 @@ class GameData with ChangeNotifier {
   int get parentPopularity => _parentPopularity;
   int get teacherPopularity => _teacherPopularity;
 
+  List<Skill> get activeSkills => _activeSkills;
+
+  set activeSkills(List<Skill> newValue) {
+    if (newValue != _activeSkills) {
+      _activeSkills = newValue;
+      notifyListeners();
+    }
+  }
+
   //todo: Pokud neco klesne pod 0: GAME OVER BITCH
   set sleep(int newValue) {
-    if(newValue != _sleep && 0 <= newValue && newValue <= 100) {
+    if (newValue != _sleep && 0 <= newValue && newValue <= 100) {
       _sleep = newValue;
       notifyListeners();
     }
   }
 
   set money(int newValue) {
-    if(newValue != _money && 0 <= newValue && newValue <= 100) {
-       _money = newValue;
+    if (newValue != _money && 0 <= newValue && newValue <= 100) {
+      _money = newValue;
       notifyListeners();
     }
   }
 
   set happiness(int newValue) {
-    if(newValue != _happiness && 0 <= newValue && newValue <= 100) {
+    if (newValue != _happiness && 0 <= newValue && newValue <= 100) {
       _happiness = newValue;
-    notifyListeners();
+      notifyListeners();
     }
   }
 
   set peerPopularity(int newValue) {
-    if(newValue != _peerPopularity && 0 <= newValue && (newValue + _parentPopularity + _teacherPopularity) <= 100) {
+    if (newValue != _peerPopularity &&
+        0 <= newValue &&
+        (newValue + _parentPopularity + _teacherPopularity) <= 100) {
       _peerPopularity = newValue;
-    notifyListeners();
+      notifyListeners();
     }
   }
 
   set parentPopularity(int newValue) {
-    if(newValue != _parentPopularity && 0 <= newValue && (newValue + _peerPopularity + _teacherPopularity) <= 100) {
+    if (newValue != _parentPopularity &&
+        0 <= newValue &&
+        (newValue + _peerPopularity + _teacherPopularity) <= 100) {
       _parentPopularity = newValue;
-    notifyListeners();
+      notifyListeners();
     }
   }
 
   set teacherPopularity(int newValue) {
-    if(newValue != _teacherPopularity && 0 <= newValue && (newValue + _parentPopularity + _peerPopularity) <= 100) {
+    if (newValue != _teacherPopularity &&
+        0 <= newValue &&
+        (newValue + _parentPopularity + _peerPopularity) <= 100) {
       _teacherPopularity = newValue;
-    notifyListeners();
+      notifyListeners();
     }
   }
 
-  void loadFromDatabase (AppDatabase db) async{
-    if((await db.getAllGameData()).length == 1) {
+  void loadFromDatabase(AppDatabase db) async {
+    if ((await db.getAllGameData()).length == 1) {
       GameDataSave toLoad = (await db.getAllGameData())[0];
       _sleep = toLoad.sleep;
       _money = toLoad.money;
@@ -85,14 +128,17 @@ class GameData with ChangeNotifier {
       _peerPopularity = toLoad.peerPopularity;
       _parentPopularity = toLoad.parentPopularity;
       _teacherPopularity = toLoad.teacherPopularity;
-    }
-    else {
-      _sleep = 0;
+      //todo: skill neni vvzdy v databazi? pise to 'gamedata load from database failed'
+      if (await db.skillById(toLoad.activeSkill1) != null) {_activeSkills[0] = await db.skillById(toLoad.activeSkill1);}
+      if (await db.skillById(toLoad.activeSkill2) != null) {_activeSkills[1] = await db.skillById(toLoad.activeSkill2);}
+      if (await db.skillById(toLoad.activeSkill3) != null) {_activeSkills[2] = await db.skillById(toLoad.activeSkill3);}
+    } else {
+      print('gamedata load from database failed');
     }
     notifyListeners();
   }
 
-  void saveToDatabase (AppDatabase db) async{
+  void saveToDatabase(AppDatabase db) async {
     GameDataSave toSave = GameDataSave(
       id: 1,
       sleep: _sleep,
@@ -101,13 +147,21 @@ class GameData with ChangeNotifier {
       peerPopularity: _peerPopularity,
       parentPopularity: _parentPopularity,
       teacherPopularity: _teacherPopularity,
+      activeSkill1: _activeSkills[0].name,
+      activeSkill2: _activeSkills[1].name,
+      activeSkill3: _activeSkills[2].name,
     );
 
-    if((await db.getAllGameData()).length == 1) {
+    if ((await db.getAllGameData()).length == 1) {
       db.updateGameData(toSave);
-    }
-    else {
+      print("updating gamedata");
+    } else {
       db.insertGameData(toSave);
+      print("saving gamedata");
     }
+
+    db.updateSkill(_activeSkills[0]);
+    db.updateSkill(_activeSkills[1]);
+    db.updateSkill(_activeSkills[2]);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gvp_sim_db/gameData.dart';
 import 'package:provider/provider.dart';
+import 'database/moor_database.dart';
 
 class EncounterEnd extends StatelessWidget {
   EncounterEnd({Key key, this.currentEvent, this.sentence}) : super(key: key);
@@ -54,7 +55,7 @@ class EncounterEnd extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(5.0),
                   child: Text(
-                    "Tvoje staty se změnily o:\nSleep: ${gamedata.currentChanges['sleep']} Money: ${gamedata.currentChanges['money']}\nHappiness: ${gamedata.currentChanges['happiness']} PeerPop: ${gamedata.currentChanges['peerPopularity']}\nParentPop: ${gamedata.currentChanges['parentPopularity']} TeacherPop: ${gamedata.currentChanges['teacherPopularity']}",
+                    "Tvoje staty se změnily o:\nSleep: ${gamedata.currentChanges['sleep']} Money: ${gamedata.currentChanges['money']}\nHappiness: ${gamedata.currentChanges['happiness']} PeerPop: ${gamedata.currentChanges['peerPopularity']}\nParentPop: ${gamedata.currentChanges['parentPopularity']} TeacherPop: ${gamedata.currentChanges['teacherPopularity']}. Odemkl jsi skill ${gamedata.currentChanges['skillsUnlocked']}",
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.black,
@@ -70,6 +71,8 @@ class EncounterEnd extends StatelessWidget {
                 backgroundColor: Colors.blue[900],
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                 onPressed: () {
+                  GameData gameData = Provider.of<GameData>(context, listen: false);
+                  gameData.saveToDatabase(Provider.of<AppDatabase>(context, listen: false));
                   gamedata.currentChanges = {'sleep': 0, 'money': 0, 'happiness': 0,
                     'peerPopularity': 0,'parentPopularity': 0,'teacherPopularity': 0};
                   Navigator.pushNamedAndRemoveUntil(context, "/ProfilePage", ModalRoute.withName("/"));

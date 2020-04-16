@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gvp_sim_db/EncounterEnd.dart';
 import 'package:gvp_sim_db/buttonData.dart';
+import 'package:gvp_sim_db/database/moor_database.dart';
 import 'package:gvp_sim_db/gameData.dart';
 import 'database/dataStorage.dart';
 import 'dart:math';
@@ -21,7 +22,7 @@ class _State extends State<Encounter> {
     _currentEvent =
         DataStorage.events[new Random().nextInt(DataStorage.EVENTCOUNT)];
 
-    return Dialogue(firstEvent: _currentEvent);
+    return Scaffold(body: Dialogue(firstEvent: _currentEvent));
   }
 }
 
@@ -44,6 +45,7 @@ class _DialogueState extends State<Dialogue> {
 
   @override
   Widget build(BuildContext context) {
+
     void _advance(ButtonData data) {
       if (data.isFinal) {
         Navigator.push(
@@ -141,8 +143,12 @@ class ReactionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void updateStats(Map changeList) {
+
+    void applyEffects(Map changeList, String unlock) async{
       GameData gameData = Provider.of<GameData>(context, listen: false);
+      AppDatabase db = Provider.of<AppDatabase>(context, listen: false);
+
+      //meni staty
       changeList.keys.forEach((key) {
         switch (key) {
           case 'sleep':
@@ -171,6 +177,23 @@ class ReactionButton extends StatelessWidget {
             break;
         }
       });
+      //odemyka skill
+      if (unlock != 'none') {
+        Skill loadedSkill = await db.skillById(unlock);
+        if (loadedSkill.available == false) {
+        Skill toUpdate = Skill(name: loadedSkill.name, iconName: loadedSkill.iconName, currentLevel: loadedSkill.currentLevel, currentHours: loadedSkill.currentHours, levelUp: loadedSkill.levelUp, available: true);
+        db.updateSkill(toUpdate);
+        gameData.currentChanges['skillsUnlocked'].add(unlock);
+        print('$unlock skill unlocked');}
+      }
+    }
+
+    Future<bool> reqMet (ButtonData data) async{
+      bool met = false;
+      AppDatabase db = Provider.of<AppDatabase>(context, listen: false);
+      Skill reqSkill = await db.skillById(source.requirements[0]);
+      if (reqSkill.currentLevel >= data.requirements[1]) {met = true;}
+      return met;
     }
 
     return Padding(
@@ -181,9 +204,21 @@ class ReactionButton extends StatelessWidget {
         child: Text(
           source.text,
         ),
-        onPressed: () {
-          updateStats(source.effects);
-          advance(source);
+        onPressed: () async{
+          if (source.requirements == null) {
+            applyEffects(source.effects, source.unlocksSkill);
+            advance(source);
+          }
+          else{
+          bool isOk = await reqMet(source);
+          if (isOk) {
+          applyEffects(source.effects, source.unlocksSkill);
+          advance(source);}
+          else{
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text("Nemas ${source.requirements[0]} na urovni ${source.requirements[1]}"),
+            ),);
+          }}
         },
       ),
     );

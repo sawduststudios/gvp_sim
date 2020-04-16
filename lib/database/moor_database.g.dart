@@ -364,6 +364,9 @@ class GameDataSave extends DataClass implements Insertable<GameDataSave> {
   final int peerPopularity;
   final int parentPopularity;
   final int teacherPopularity;
+  final String activeSkill1;
+  final String activeSkill2;
+  final String activeSkill3;
   GameDataSave(
       {@required this.id,
       this.sleep,
@@ -371,11 +374,15 @@ class GameDataSave extends DataClass implements Insertable<GameDataSave> {
       this.happiness,
       this.peerPopularity,
       this.parentPopularity,
-      this.teacherPopularity});
+      this.teacherPopularity,
+      @required this.activeSkill1,
+      @required this.activeSkill2,
+      @required this.activeSkill3});
   factory GameDataSave.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final intType = db.typeSystem.forDartType<int>();
+    final stringType = db.typeSystem.forDartType<String>();
     return GameDataSave(
       id: intType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       sleep: intType.mapFromDatabaseResponse(data['${effectivePrefix}sleep']),
@@ -388,6 +395,12 @@ class GameDataSave extends DataClass implements Insertable<GameDataSave> {
           .mapFromDatabaseResponse(data['${effectivePrefix}parent_popularity']),
       teacherPopularity: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}teacher_popularity']),
+      activeSkill1: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}active_skill1']),
+      activeSkill2: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}active_skill2']),
+      activeSkill3: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}active_skill3']),
     );
   }
   factory GameDataSave.fromJson(Map<String, dynamic> json,
@@ -401,6 +414,9 @@ class GameDataSave extends DataClass implements Insertable<GameDataSave> {
       peerPopularity: serializer.fromJson<int>(json['peerPopularity']),
       parentPopularity: serializer.fromJson<int>(json['parentPopularity']),
       teacherPopularity: serializer.fromJson<int>(json['teacherPopularity']),
+      activeSkill1: serializer.fromJson<String>(json['activeSkill1']),
+      activeSkill2: serializer.fromJson<String>(json['activeSkill2']),
+      activeSkill3: serializer.fromJson<String>(json['activeSkill3']),
     );
   }
   @override
@@ -414,6 +430,9 @@ class GameDataSave extends DataClass implements Insertable<GameDataSave> {
       'peerPopularity': serializer.toJson<int>(peerPopularity),
       'parentPopularity': serializer.toJson<int>(parentPopularity),
       'teacherPopularity': serializer.toJson<int>(teacherPopularity),
+      'activeSkill1': serializer.toJson<String>(activeSkill1),
+      'activeSkill2': serializer.toJson<String>(activeSkill2),
+      'activeSkill3': serializer.toJson<String>(activeSkill3),
     };
   }
 
@@ -437,6 +456,15 @@ class GameDataSave extends DataClass implements Insertable<GameDataSave> {
       teacherPopularity: teacherPopularity == null && nullToAbsent
           ? const Value.absent()
           : Value(teacherPopularity),
+      activeSkill1: activeSkill1 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activeSkill1),
+      activeSkill2: activeSkill2 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activeSkill2),
+      activeSkill3: activeSkill3 == null && nullToAbsent
+          ? const Value.absent()
+          : Value(activeSkill3),
     );
   }
 
@@ -447,7 +475,10 @@ class GameDataSave extends DataClass implements Insertable<GameDataSave> {
           int happiness,
           int peerPopularity,
           int parentPopularity,
-          int teacherPopularity}) =>
+          int teacherPopularity,
+          String activeSkill1,
+          String activeSkill2,
+          String activeSkill3}) =>
       GameDataSave(
         id: id ?? this.id,
         sleep: sleep ?? this.sleep,
@@ -456,6 +487,9 @@ class GameDataSave extends DataClass implements Insertable<GameDataSave> {
         peerPopularity: peerPopularity ?? this.peerPopularity,
         parentPopularity: parentPopularity ?? this.parentPopularity,
         teacherPopularity: teacherPopularity ?? this.teacherPopularity,
+        activeSkill1: activeSkill1 ?? this.activeSkill1,
+        activeSkill2: activeSkill2 ?? this.activeSkill2,
+        activeSkill3: activeSkill3 ?? this.activeSkill3,
       );
   @override
   String toString() {
@@ -466,7 +500,10 @@ class GameDataSave extends DataClass implements Insertable<GameDataSave> {
           ..write('happiness: $happiness, ')
           ..write('peerPopularity: $peerPopularity, ')
           ..write('parentPopularity: $parentPopularity, ')
-          ..write('teacherPopularity: $teacherPopularity')
+          ..write('teacherPopularity: $teacherPopularity, ')
+          ..write('activeSkill1: $activeSkill1, ')
+          ..write('activeSkill2: $activeSkill2, ')
+          ..write('activeSkill3: $activeSkill3')
           ..write(')'))
         .toString();
   }
@@ -482,8 +519,14 @@ class GameDataSave extends DataClass implements Insertable<GameDataSave> {
                   happiness.hashCode,
                   $mrjc(
                       peerPopularity.hashCode,
-                      $mrjc(parentPopularity.hashCode,
-                          teacherPopularity.hashCode)))))));
+                      $mrjc(
+                          parentPopularity.hashCode,
+                          $mrjc(
+                              teacherPopularity.hashCode,
+                              $mrjc(
+                                  activeSkill1.hashCode,
+                                  $mrjc(activeSkill2.hashCode,
+                                      activeSkill3.hashCode))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -494,7 +537,10 @@ class GameDataSave extends DataClass implements Insertable<GameDataSave> {
           other.happiness == this.happiness &&
           other.peerPopularity == this.peerPopularity &&
           other.parentPopularity == this.parentPopularity &&
-          other.teacherPopularity == this.teacherPopularity);
+          other.teacherPopularity == this.teacherPopularity &&
+          other.activeSkill1 == this.activeSkill1 &&
+          other.activeSkill2 == this.activeSkill2 &&
+          other.activeSkill3 == this.activeSkill3);
 }
 
 class GameDataSavesCompanion extends UpdateCompanion<GameDataSave> {
@@ -505,6 +551,9 @@ class GameDataSavesCompanion extends UpdateCompanion<GameDataSave> {
   final Value<int> peerPopularity;
   final Value<int> parentPopularity;
   final Value<int> teacherPopularity;
+  final Value<String> activeSkill1;
+  final Value<String> activeSkill2;
+  final Value<String> activeSkill3;
   const GameDataSavesCompanion({
     this.id = const Value.absent(),
     this.sleep = const Value.absent(),
@@ -513,6 +562,9 @@ class GameDataSavesCompanion extends UpdateCompanion<GameDataSave> {
     this.peerPopularity = const Value.absent(),
     this.parentPopularity = const Value.absent(),
     this.teacherPopularity = const Value.absent(),
+    this.activeSkill1 = const Value.absent(),
+    this.activeSkill2 = const Value.absent(),
+    this.activeSkill3 = const Value.absent(),
   });
   GameDataSavesCompanion.insert({
     @required int id,
@@ -522,7 +574,13 @@ class GameDataSavesCompanion extends UpdateCompanion<GameDataSave> {
     this.peerPopularity = const Value.absent(),
     this.parentPopularity = const Value.absent(),
     this.teacherPopularity = const Value.absent(),
-  }) : id = Value(id);
+    @required String activeSkill1,
+    @required String activeSkill2,
+    @required String activeSkill3,
+  })  : id = Value(id),
+        activeSkill1 = Value(activeSkill1),
+        activeSkill2 = Value(activeSkill2),
+        activeSkill3 = Value(activeSkill3);
   GameDataSavesCompanion copyWith(
       {Value<int> id,
       Value<int> sleep,
@@ -530,7 +588,10 @@ class GameDataSavesCompanion extends UpdateCompanion<GameDataSave> {
       Value<int> happiness,
       Value<int> peerPopularity,
       Value<int> parentPopularity,
-      Value<int> teacherPopularity}) {
+      Value<int> teacherPopularity,
+      Value<String> activeSkill1,
+      Value<String> activeSkill2,
+      Value<String> activeSkill3}) {
     return GameDataSavesCompanion(
       id: id ?? this.id,
       sleep: sleep ?? this.sleep,
@@ -539,6 +600,9 @@ class GameDataSavesCompanion extends UpdateCompanion<GameDataSave> {
       peerPopularity: peerPopularity ?? this.peerPopularity,
       parentPopularity: parentPopularity ?? this.parentPopularity,
       teacherPopularity: teacherPopularity ?? this.teacherPopularity,
+      activeSkill1: activeSkill1 ?? this.activeSkill1,
+      activeSkill2: activeSkill2 ?? this.activeSkill2,
+      activeSkill3: activeSkill3 ?? this.activeSkill3,
     );
   }
 }
@@ -638,6 +702,48 @@ class $GameDataSavesTable extends GameDataSaves
     );
   }
 
+  final VerificationMeta _activeSkill1Meta =
+      const VerificationMeta('activeSkill1');
+  GeneratedTextColumn _activeSkill1;
+  @override
+  GeneratedTextColumn get activeSkill1 =>
+      _activeSkill1 ??= _constructActiveSkill1();
+  GeneratedTextColumn _constructActiveSkill1() {
+    return GeneratedTextColumn(
+      'active_skill1',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _activeSkill2Meta =
+      const VerificationMeta('activeSkill2');
+  GeneratedTextColumn _activeSkill2;
+  @override
+  GeneratedTextColumn get activeSkill2 =>
+      _activeSkill2 ??= _constructActiveSkill2();
+  GeneratedTextColumn _constructActiveSkill2() {
+    return GeneratedTextColumn(
+      'active_skill2',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _activeSkill3Meta =
+      const VerificationMeta('activeSkill3');
+  GeneratedTextColumn _activeSkill3;
+  @override
+  GeneratedTextColumn get activeSkill3 =>
+      _activeSkill3 ??= _constructActiveSkill3();
+  GeneratedTextColumn _constructActiveSkill3() {
+    return GeneratedTextColumn(
+      'active_skill3',
+      $tableName,
+      false,
+    );
+  }
+
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -646,7 +752,10 @@ class $GameDataSavesTable extends GameDataSaves
         happiness,
         peerPopularity,
         parentPopularity,
-        teacherPopularity
+        teacherPopularity,
+        activeSkill1,
+        activeSkill2,
+        activeSkill3
       ];
   @override
   $GameDataSavesTable get asDslTable => this;
@@ -693,6 +802,30 @@ class $GameDataSavesTable extends GameDataSaves
           teacherPopularity.isAcceptableValue(
               d.teacherPopularity.value, _teacherPopularityMeta));
     }
+    if (d.activeSkill1.present) {
+      context.handle(
+          _activeSkill1Meta,
+          activeSkill1.isAcceptableValue(
+              d.activeSkill1.value, _activeSkill1Meta));
+    } else if (isInserting) {
+      context.missing(_activeSkill1Meta);
+    }
+    if (d.activeSkill2.present) {
+      context.handle(
+          _activeSkill2Meta,
+          activeSkill2.isAcceptableValue(
+              d.activeSkill2.value, _activeSkill2Meta));
+    } else if (isInserting) {
+      context.missing(_activeSkill2Meta);
+    }
+    if (d.activeSkill3.present) {
+      context.handle(
+          _activeSkill3Meta,
+          activeSkill3.isAcceptableValue(
+              d.activeSkill3.value, _activeSkill3Meta));
+    } else if (isInserting) {
+      context.missing(_activeSkill3Meta);
+    }
     return context;
   }
 
@@ -729,6 +862,15 @@ class $GameDataSavesTable extends GameDataSaves
     if (d.teacherPopularity.present) {
       map['teacher_popularity'] =
           Variable<int, IntType>(d.teacherPopularity.value);
+    }
+    if (d.activeSkill1.present) {
+      map['active_skill1'] = Variable<String, StringType>(d.activeSkill1.value);
+    }
+    if (d.activeSkill2.present) {
+      map['active_skill2'] = Variable<String, StringType>(d.activeSkill2.value);
+    }
+    if (d.activeSkill3.present) {
+      map['active_skill3'] = Variable<String, StringType>(d.activeSkill3.value);
     }
     return map;
   }

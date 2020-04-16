@@ -14,6 +14,9 @@ class GameDataSaves extends Table{
   IntColumn get peerPopularity => integer().nullable()();
   IntColumn get parentPopularity => integer().nullable()();
   IntColumn get teacherPopularity => integer().nullable()();
+  TextColumn get activeSkill1 => text()();
+  TextColumn get activeSkill2 => text()();
+  TextColumn get activeSkill3 => text()();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -112,8 +115,8 @@ class AppDatabase extends _$AppDatabase {
   Future insertSkill(Skill skill) => into(skills).insert(skill);
   Future updateSkill(Skill skill) => update(skills).replace(skill);
   Future deleteSkill(Skill skill) => delete(skills).delete(skill);
-  Stream<Skill> skillById(String name) {
-    return (select(skills)..where((t) => t.name.equals(name))).watchSingle();
+  Future<Skill> skillById(String name) {
+    return (select(skills)..where((t) => t.name.equals(name))).getSingle();
   }
   Stream<List<Skill>> watchOrderedSkills() => (select(skills)
     ..orderBy([
