@@ -21,28 +21,29 @@ class GameData with ChangeNotifier {
   int _teacherPopularity = 30;
   List<Skill> _activeSkills = [
     Skill(
-        name: 'test skill',
+        name: 'test skill 1',
         iconName: 'dummyicon',
         available: true,
         currentHours: 0,
         currentLevel: 0,
-        levelUp: [6]),
+        levelUp: [2,4]),
     Skill(
-        name: 'dummy skill',
+        name: 'test skill 2',
         iconName: 'dummyicon',
         available: true,
         currentHours: 0,
         currentLevel: 0,
-        levelUp: [0]),
+        levelUp: [2,4]),
     Skill(
-        name: 'dummy skill',
+        name: 'test skill 3',
         iconName: 'dummyicon',
         available: true,
         currentHours: 0,
         currentLevel: 0,
-        levelUp: [0])
+        levelUp: [2,4]),
   ];
   int _dailyHours = 0;
+  List<int> _alreadyLearned = [0, 0, 0];
 
 
   int get sleep => _sleep;
@@ -53,6 +54,7 @@ class GameData with ChangeNotifier {
   int get teacherPopularity => _teacherPopularity;
   List<Skill> get activeSkills => _activeSkills;
   int get dailyHours => _dailyHours;
+  List<int> get alreadyLearned => _alreadyLearned;
 
   //todo: Pokud neco klesne pod 0: GAME OVER BITCH
   set sleep(int newValue) {
@@ -103,9 +105,11 @@ class GameData with ChangeNotifier {
     }
   }
 
+  //todo: zmeny skillu se nijak neprojevuji v databazi
   set activeSkills(List<Skill> newValue) {
     if(newValue != _activeSkills) {
       _activeSkills = newValue;
+
       notifyListeners();
     }
   }
@@ -120,6 +124,13 @@ class GameData with ChangeNotifier {
         sleep += 10*(newValue - _dailyHours);
       }
       _dailyHours = newValue;
+      notifyListeners();
+    }
+  }
+
+  set alreadyLearned(List<int> newValue) {
+    if(newValue != alreadyLearned) {
+      _alreadyLearned = newValue;
       notifyListeners();
     }
   }

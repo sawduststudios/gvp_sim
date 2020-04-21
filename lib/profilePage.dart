@@ -11,6 +11,16 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
 
+  void lvlUpSkill(int index) {
+    GameData gameData = Provider.of<GameData>(context, listen: false);
+    if ((gameData.activeSkills[index].currentHours == gameData.activeSkills[index].levelUp[gameData.activeSkills[index].currentLevel]) & (gameData.activeSkills[index].currentLevel < gameData.activeSkills[index].levelUp.length -1)){
+      gameData.activeSkills[index] = gameData.activeSkills[index].copyWith(currentLevel: gameData.activeSkills[index].currentLevel + 1, currentHours: 0);
+      gameData.alreadyLearned[index] = 0;
+      print('lvlup skillu ${gameData.activeSkills[index].name}');
+    }
+    else{print('no lvlup ${index}');}
+  }
+
   void ProfilePageSubmit() {
     GameData gameData = Provider.of<GameData>(context, listen: false);
     if(gameData.sleep <= 0) {
@@ -20,6 +30,14 @@ class _ProfilePageState extends State<ProfilePage> {
       if(gameData.sleep > 100) {
         gameData.sleep = 100;
       }
+      gameData.alreadyLearned[0] = gameData.activeSkills[0].currentHours;
+      gameData.alreadyLearned[1] = gameData.activeSkills[1].currentHours;
+      gameData.alreadyLearned[2] = gameData.activeSkills[2].currentHours;
+
+      lvlUpSkill(0);
+      lvlUpSkill(1);
+      lvlUpSkill(2);
+
       gameData.saveToDatabase(Provider.of<AppDatabase>(context, listen: false));
       Navigator.pushReplacementNamed(context, "/Encounter");
     }
@@ -93,6 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.blue[900],
         onPressed: () {
           ProfilePageSubmit();
+
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -250,16 +269,13 @@ class SkillBox extends StatefulWidget {
 }
 
 class _SkillBoxState extends State<SkillBox> {
-  //int currentHours;
-  //int maxHours;
-  //GameData gameData;
-  //Skill activeSkill;
+  int minHours;
 
   @override
   void initState() {
     super.initState();
-    //currenth = currentHours;
-    //maxh = widget.activeSkill.levelUp[widget.activeSkill.currentLevel];
+    final gameData = Provider.of<GameData>(context, listen: false);
+    minHours = gameData.alreadyLearned[widget.activeSkillSlot];
   }
 
   @override
@@ -269,7 +285,7 @@ class _SkillBoxState extends State<SkillBox> {
     return SwipeDetector(
       //todo: moznost dat podminku co misto dummyskillu ukaze prazdno
       onSwipeLeft: () {
-        if (activeSkill.currentHours > 0) {
+        if ((activeSkill.currentHours > 0) & (activeSkill.currentHours > minHours)) {
           setState(() {
             int newHours = activeSkill.currentHours - 1;
             gameData.activeSkills[widget.activeSkillSlot] =
@@ -277,7 +293,9 @@ class _SkillBoxState extends State<SkillBox> {
             gameData.dailyHours += 1;
             print('odecitam hodiny');
           });
+          print(gameData.sleep);
         }
+        else{print('jdes pod nulu, nebo se chces odnaucovat');}
       },
       onSwipeRight: () {
         if (activeSkill.currentHours <
@@ -289,7 +307,9 @@ class _SkillBoxState extends State<SkillBox> {
             gameData.dailyHours -= 1;
             print('pricitam hodiny');
           });
+        print(gameData.sleep);
         }
+        else{print('nelze jit nad max lvl!');}
       },
       swipeConfiguration: SwipeConfiguration(
         horizontalSwipeMaxHeightThreshold: 10000.0,
