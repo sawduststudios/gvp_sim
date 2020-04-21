@@ -23,6 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void ProfilePageSubmit() {
     GameData gameData = Provider.of<GameData>(context, listen: false);
+    //pokud nemam sleep, umru
     if(gameData.sleep <= 0) {
       print('GAME OVER, usnul jsi');
     }
@@ -37,6 +38,8 @@ class _ProfilePageState extends State<ProfilePage> {
       lvlUpSkill(0);
       lvlUpSkill(1);
       lvlUpSkill(2);
+
+      gameData.savedPosition['page'] = '/Encounter';
 
       gameData.saveToDatabase(Provider.of<AppDatabase>(context, listen: false));
       Navigator.pushReplacementNamed(context, "/Encounter");
@@ -111,7 +114,6 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.blue[900],
         onPressed: () {
           ProfilePageSubmit();
-
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

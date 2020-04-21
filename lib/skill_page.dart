@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gvp_sim_db/SkillChanger.dart';
 import 'package:provider/provider.dart';
 import 'database/moor_database.dart';
 import 'package:moor/moor.dart';
@@ -45,6 +46,9 @@ class SkillTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    GameData gameData = Provider.of<GameData>(context, listen: false);
+
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
       actions: <Widget>[
@@ -58,9 +62,19 @@ class SkillTile extends StatelessWidget {
       secondaryActions: <Widget>[
         IconSlideAction(
           caption: 'Add',
-          color: Colors.lightBlue,
+          color: (new List<String>.generate(3, (i) => gameData.activeSkills[i].name)
+              .contains(shownSkill.name)) ? Colors.grey : Colors.lightBlue,
           icon: Icons.add,
-          onTap: () {},
+          onTap: () {
+            if(!new List<String>.generate(3, (i) => gameData.activeSkills[i].name)
+                .contains(shownSkill.name))
+            {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) => SkillChanger(newSkill: shownSkill),
+                )
+              );
+            }
+          },
         )
       ],
       child: Card(
@@ -72,9 +86,8 @@ class SkillTile extends StatelessWidget {
             subtitle: Text(
                 """Current level: ${shownSkill.currentLevel.toString()}\nHours to next level: ${shownSkill.levelUp[shownSkill.currentLevel].toString()}"""),
             isThreeLine: true,
-            trailing: (Provider.of<GameData>(context, listen: false)
-                    .activeSkills
-                    .contains(shownSkill))
+            trailing: (new List<String>.generate(3, (i) => gameData.activeSkills[i].name)
+                .contains(shownSkill.name))
                 ? Text(
                     'Aktivní',  //todo: zelena tecka
                     style: TextStyle(color: Colors.green),

@@ -5,11 +5,27 @@ import 'package:gvp_sim_db/eventState.dart';
 
 class DataStorage {
 
-  static const SKILLCOUNT = 9;
+  static const SKILLCOUNT = 11;
   static const EVENTCOUNT = 2;
   static const EVENTSTATECOUNT = 4;
 
   static List<Skill> skills = [
+    Skill(
+      name: "Seriousness",
+      iconName: "guitar",
+      currentHours: 0,
+      currentLevel: 0,
+      levelUp: [3,5,7],
+      available: true,
+    ),
+    Skill(
+      name: "Nonjokingness",
+      iconName: "guitar",
+      currentHours: 0,
+      currentLevel: 0,
+      levelUp: [6,10,13],
+      available: true,
+    ),
     Skill(
       name: "kytara",
       iconName: "guitar",

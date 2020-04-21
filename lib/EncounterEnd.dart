@@ -13,12 +13,17 @@ class EncounterEnd extends StatelessWidget {
 
     void EncounterSubmit() {
       GameData gameData = Provider.of<GameData>(context, listen: false);
+
       gameData.resetDailyHours();
       print(gameData.sleep);
       gameData.dailyHours = 5;
       print(gameData.sleep);
+
       gameData.currentChanges = {'sleep': 0, 'money': 0, 'happiness': 0,
         'peerPopularity': 0,'parentPopularity': 0,'teacherPopularity': 0, 'skillsUnlocked': []};
+
+      gameData.savedPosition['page'] = '/ProfilePage';
+
       gameData.saveToDatabase(Provider.of<AppDatabase>(context, listen: false));
       Navigator.pushNamedAndRemoveUntil(context, "/ProfilePage", ModalRoute.withName("/"));
     }

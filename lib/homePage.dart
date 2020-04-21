@@ -55,10 +55,10 @@ class HomePage extends StatelessWidget {
               ),
               onPressed: () {
                 AppDatabase db = Provider.of<AppDatabase>(context, listen: false);
-                GameData _gameData = Provider.of<GameData>(context, listen: false);
+                GameData gameData = Provider.of<GameData>(context, listen: false);
                 //_gameData.sleep = 30;
-                _gameData.loadFromDatabase(db);
-                Navigator.pushNamed(context, '/Encounter');},
+                gameData.loadFromDatabase(db);
+                Navigator.pushNamed(context, gameData.savedPosition['page']);},
             ),
             SizedBox(
               height: 30,

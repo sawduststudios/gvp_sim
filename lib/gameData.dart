@@ -3,7 +3,7 @@ import 'database/moor_database.dart';
 
 //todo: uložit jména skillů ve skillboxu
 class GameData with ChangeNotifier {
-  Map currentChanges = {
+  Map<String, dynamic> currentChanges = {
     'sleep': 0,
     'money': 0,
     'happiness': 0,
@@ -11,6 +11,9 @@ class GameData with ChangeNotifier {
     'parentPopularity': 0,
     'teacherPopularity': 0,
     'skillsUnlocked' : [],
+  };
+  Map<String, String> savedPosition = {
+    'page': "/Encounter",
   };
 
   int _sleep = 50;
@@ -21,19 +24,21 @@ class GameData with ChangeNotifier {
   int _teacherPopularity = 30;
   List<Skill> _activeSkills = [
     Skill(
-        name: 'test skill 1',
-        iconName: 'dummyicon',
-        available: true,
-        currentHours: 0,
-        currentLevel: 0,
-        levelUp: [2,4]),
+      name: "Seriousness",
+      iconName: "guitar",
+      currentHours: 0,
+      currentLevel: 0,
+      levelUp: [3,5,7],
+      available: true,
+    ),
     Skill(
-        name: 'test skill 2',
-        iconName: 'dummyicon',
-        available: true,
-        currentHours: 0,
-        currentLevel: 0,
-        levelUp: [2,4]),
+      name: "Nonjokingness",
+      iconName: "guitar",
+      currentHours: 0,
+      currentLevel: 0,
+      levelUp: [6,10,13],
+      available: true,
+    ),
     Skill(
         name: 'test skill 3',
         iconName: 'dummyicon',
@@ -171,6 +176,7 @@ class GameData with ChangeNotifier {
       activeSkill1: _activeSkills[0].name,
       activeSkill2: _activeSkills[1].name,
       activeSkill3: _activeSkills[2].name,
+      savedPosition: savedPosition,
     );
 
     if ((await db.getAllGameData()).length == 1) {
