@@ -16,6 +16,7 @@ class GameData with ChangeNotifier {
     'page': "/Encounter",
   };
 
+  bool _isGvpTheme = true;
   int _sleep = 50;
   int _money = 20;
   int _happiness = 50;
@@ -60,6 +61,14 @@ class GameData with ChangeNotifier {
   List<Skill> get activeSkills => _activeSkills;
   int get dailyHours => _dailyHours;
   List<int> get alreadyLearned => _alreadyLearned;
+  bool get isGvpTheme => _isGvpTheme;
+
+  set isGvpTheme(bool newValue) {
+    if (newValue != _isGvpTheme) {
+      _isGvpTheme = newValue;
+      notifyListeners();
+    }
+  }
 
   //todo: Pokud neco klesne pod 0: GAME OVER BITCH
   set sleep(int newValue) {

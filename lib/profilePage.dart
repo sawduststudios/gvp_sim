@@ -50,8 +50,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     GameData gameData = Provider.of<GameData>(context, listen: true);
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: Text('Odpoledne'),
+        title: Text('Odpoledne',
+        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,),),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -60,6 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
+              SizedBox(height: 15,),
               Container(
                 height: 300,
                 child: Row(
@@ -77,11 +80,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+                  padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
                   child: Center(
                       child: Text(
                         '${gameData.dailyHours}',
-                        style: TextStyle(fontSize: 30),
+                        style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
                       )
                   )
               ),
@@ -110,15 +113,16 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Icon(
           Icons.check,
           size: 35,
+          color: Theme.of(context).backgroundColor,
         ),
-        backgroundColor: Colors.blue[900],
+        backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
           ProfilePageSubmit();
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        color: Colors.blue,
+        color: Theme.of(context).primaryColor,
         shape: CircularNotchedRectangle(),
         notchMargin: 4.0,
         child: Row(
@@ -300,8 +304,8 @@ class _SkillBoxState extends State<SkillBox> {
         else{print('jdes pod nulu, nebo se chces odnaucovat');}
       },
       onSwipeRight: () {
-        if (activeSkill.currentHours <
-            activeSkill.levelUp[activeSkill.currentLevel]) {
+        if ((activeSkill.currentHours <
+            activeSkill.levelUp[activeSkill.currentLevel]) & (gameData.sleep > 0)) {
           setState(() {
             int newHours = activeSkill.currentHours + 1;
             gameData.activeSkills[widget.activeSkillSlot] =
@@ -347,6 +351,7 @@ class _SkillBoxState extends State<SkillBox> {
                   child: Icon(
                     Icons.account_balance,
                     size: 60,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 Padding(

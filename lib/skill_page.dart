@@ -17,8 +17,11 @@ class _SkillPageState extends State<SkillPage> {
     final db = Provider.of<AppDatabase>(context);
 
     return Scaffold(
+      backgroundColor: Colors.grey[800],
       appBar: AppBar(
-        title: Text('Skills'),
+        title: Text('Schopnosti',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,),),
+        centerTitle: true,
       ),
       body: StreamBuilder(
           stream: db.watchOrderedSkills(),
@@ -63,11 +66,11 @@ class SkillTile extends StatelessWidget {
         IconSlideAction(
           caption: 'Add',
           color: (new List<String>.generate(3, (i) => gameData.activeSkills[i].name)
-              .contains(shownSkill.name)) ? Colors.grey : Colors.lightBlue,
+              .contains(shownSkill.name) | (shownSkill.available == false)) ? Colors.grey : Theme.of(context).primaryColor,
           icon: Icons.add,
           onTap: () {
             if(!new List<String>.generate(3, (i) => gameData.activeSkills[i].name)
-                .contains(shownSkill.name))
+                .contains(shownSkill.name) & (shownSkill.available))
             {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) => SkillChanger(newSkill: shownSkill),
@@ -78,19 +81,19 @@ class SkillTile extends StatelessWidget {
         )
       ],
       child: Card(
-        color: shownSkill.available ? Colors.pinkAccent : Colors.grey,
+        color: shownSkill.available ? Theme.of(context).accentColor : Colors.grey,
         child: ListTile(
-            leading: Icon(Icons.add), //FlutterLogo(size: 72.0),
+            leading: Icon(Icons.add, color: Colors.white,), //FlutterLogo(size: 72.0),
             onTap: () {},
-            title: Text("${shownSkill.name}"),
+            title: Text("${shownSkill.name}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),
             subtitle: Text(
-                """Current level: ${shownSkill.currentLevel.toString()}\nHours to next level: ${shownSkill.levelUp[shownSkill.currentLevel].toString()}"""),
+                """Current level: ${shownSkill.currentLevel.toString()}\nHours to next level: ${shownSkill.levelUp[shownSkill.currentLevel].toString()}""", style: TextStyle(fontSize: 15)),
             isThreeLine: true,
             trailing: (new List<String>.generate(3, (i) => gameData.activeSkills[i].name)
                 .contains(shownSkill.name))
                 ? Text(
                     'Aktivní',  //todo: zelena tecka
-                    style: TextStyle(color: Colors.green),
+                    style: TextStyle(color: (gameData.isGvpTheme) ? Colors.green[500] : Colors.green[300], fontWeight: FontWeight.bold), //300 a 600
                   )
                 : Text("")),
       ),

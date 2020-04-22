@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:gvp_sim_db/EncounterEnd.dart';
 import 'package:gvp_sim_db/buttonData.dart';
@@ -67,7 +69,7 @@ class _DialogueState extends State<Dialogue> {
 
     return SafeArea(
         child: Container(
-      color: Colors.white,
+      color: Theme.of(context).backgroundColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,8 +77,8 @@ class _DialogueState extends State<Dialogue> {
           Text(
             widget.firstEvent.personName,
             style: TextStyle(
-              fontSize: 26,
               color: Colors.black,
+              fontSize: 35,
               fontWeight: FontWeight.bold,
               decoration: TextDecoration.none,
             ),
@@ -88,16 +90,12 @@ class _DialogueState extends State<Dialogue> {
           Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4.0),
-                border: Border.all(width: 2.0, color: Colors.black)),
+                border: Border.all(width: 2.0, color: Theme.of(context).primaryColor)),
             child: Padding(
               padding: EdgeInsets.all(5.0),
               child: Text(
                 _currentState.sentence,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  decoration: TextDecoration.none,
-                ),
+                style: Theme.of(context).textTheme.body1,
               ),
             ),
           ),
@@ -199,9 +197,10 @@ class ReactionButton extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 5.0),
       child: FlatButton(
         padding: EdgeInsets.all(5.0),
-        color: Colors.blue,
+        color: Theme.of(context).primaryColor,
         child: Text(
           source.text,
+          style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white),
         ),
         onPressed: () async{
           if (source.requirements == null) {
