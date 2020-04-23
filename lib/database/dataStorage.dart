@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import "package:gvp_sim_db/database/moor_database.dart";
 import 'package:gvp_sim_db/buttonData.dart';
 import 'package:gvp_sim_db/event.dart';
 import 'package:gvp_sim_db/eventState.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class DataStorage {
 
@@ -99,6 +101,12 @@ class DataStorage {
       available: true,
     ),
   ];
+
+  static  Map<String, IconData> skillIcons= {
+    'kytara' : Icons.add,
+    'Flutter' : Icons.calendar_view_day
+  };
+
 //todo: tvuj program dela initStateID s malym 'd'
   static List<Event> events = [
     Event(

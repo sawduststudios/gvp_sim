@@ -3,6 +3,7 @@ import 'package:gvp_sim_db/database/moor_database.dart';
 import 'package:gvp_sim_db/gameData.dart';
 import 'package:provider/provider.dart';
 import 'package:swipedetector/swipedetector.dart';
+import 'database/dataStorage.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -356,7 +357,7 @@ class _SkillBoxState extends State<SkillBox> {
                 //icona skillu
                 Expanded(
                   child: Icon(
-                    Icons.account_balance,
+                    (DataStorage.skillIcons.keys.contains(activeSkill.name)) ? DataStorage.skillIcons[activeSkill.name] : Icons.money_off,
                     size: 60,
                     color: Theme.of(context).primaryColor,
                   ),
