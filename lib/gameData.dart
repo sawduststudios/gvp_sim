@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'database/moor_database.dart';
+import 'package:gvp_sim_db/gameOver.dart';
 
 //todo: uložit jména skillů ve skillboxu
 class GameData with ChangeNotifier {
@@ -18,11 +20,11 @@ class GameData with ChangeNotifier {
 
   bool _isGvpTheme = true;
   int _sleep = 50;
-  int _money = 20;
+  int _money = 50;
   int _happiness = 50;
-  int _peerPopularity = 10;
+  int _peerPopularity = 20;
   int _parentPopularity = 20;
-  int _teacherPopularity = 30;
+  int _teacherPopularity = 20;
   List<Skill> _activeSkills = [
     Skill(
       name: "Seriousness",
@@ -70,7 +72,6 @@ class GameData with ChangeNotifier {
     }
   }
 
-  //todo: Pokud neco klesne pod 0: GAME OVER BITCH
   set sleep(int newValue) {
     if (newValue != _sleep) {
       _sleep = newValue;
@@ -199,5 +200,88 @@ class GameData with ChangeNotifier {
     db.updateSkill(_activeSkills[0]);
     db.updateSkill(_activeSkills[1]);
     db.updateSkill(_activeSkills[2]);
+  }
+
+  bool isGameOver() {
+    return (
+      _sleep <= 0 ||
+      _money <= 0 ||
+      _happiness <= 0 ||
+      (_peerPopularity + _parentPopularity + _teacherPopularity) <= 0
+    );
+  }
+
+  void gameOver(BuildContext context, AppDatabase db) {
+    //Smaze save v databazi
+    GameDataSave toDelete = GameDataSave(
+      id: 1,
+      sleep: _sleep,
+      money: _money,
+      happiness: _happiness,
+      peerPopularity: _peerPopularity,
+      parentPopularity: _parentPopularity,
+      teacherPopularity: _teacherPopularity,
+      activeSkill1: _activeSkills[0].name,
+      activeSkill2: _activeSkills[1].name,
+      activeSkill3: _activeSkills[2].name,
+      savedPosition: savedPosition,
+    );
+    db.deleteGameData(toDelete);
+
+    //vynuluje gamedata v provideru
+    currentChanges = {
+      'sleep': 0,
+      'money': 0,
+      'happiness': 0,
+      'peerPopularity': 0,
+      'parentPopularity': 0,
+      'teacherPopularity': 0,
+      'skillsUnlocked' : [],
+    };
+    savedPosition = {
+      'page': "/Encounter",
+    };
+
+    _sleep = 50;
+    _money = 50;
+    _happiness = 50;
+    _peerPopularity = 20;
+    _parentPopularity = 20;
+    _teacherPopularity = 20;
+    _activeSkills = [
+      Skill(
+        name: "Seriousness",
+        iconName: "guitar",
+        currentHours: 0,
+        currentLevel: 0,
+        levelUp: [3,5,7],
+        available: true,
+      ),
+      Skill(
+        name: "Nonjokingness",
+        iconName: "guitar",
+        currentHours: 0,
+        currentLevel: 0,
+        levelUp: [6,10,13],
+        available: true,
+      ),
+      Skill(
+          name: 'test skill 3',
+          iconName: 'dummyicon',
+          available: true,
+          currentHours: 0,
+          currentLevel: 0,
+          levelUp: [2,4]),
+    ];
+    _dailyHours = 0;
+    _alreadyLearned = [0, 0, 0];
+
+    //Pushne na GameOverPage
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => GameOverPage(reason: 'DefaultReason',)
+        ),
+        ModalRoute.withName('/HomePage'));
   }
 }
