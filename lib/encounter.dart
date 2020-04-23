@@ -24,7 +24,19 @@ class _State extends State<Encounter> {
     _currentEvent =
         DataStorage.events[new Random().nextInt(DataStorage.EVENTCOUNT)];
 
-    return Scaffold(body: Dialogue(firstEvent: _currentEvent));
+    return Scaffold(
+        appBar: AppBar(title: Text('Dopoledne',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,),),
+          centerTitle: true,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(
+                    Icons.settings
+                ),
+                onPressed: () {Navigator.pushNamed(context, '/SettingsPage');},
+              )]
+        ),
+        body: Dialogue(firstEvent: _currentEvent));
   }
 }
 

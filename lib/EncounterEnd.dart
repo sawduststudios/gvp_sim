@@ -29,64 +29,70 @@ class EncounterEnd extends StatelessWidget {
     }
 
     GameData gameData = Provider.of<GameData>(context, listen: false);
-    return SafeArea(
-        child: Container(
-          color: Theme.of(context).backgroundColor,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                currentEvent.personName,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 35,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-              Image.asset(
-                currentEvent.imagePath,
-                height: 300,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4.0),
-                    border: Border.all(width: 2.0, color: Theme.of(context).primaryColor)),
-                child: Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Text(
-                    sentence,
-                    style: Theme.of(context).textTheme.body1,
+    return WillPopScope(
+      onWillPop: () async {
+        Future.value(
+            false); //return a `Future` with false value so this route cant be popped or closed.
+      },
+      child: SafeArea(
+          child: Container(
+            color: Theme.of(context).backgroundColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  currentEvent.personName,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.none,
                   ),
                 ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4.0),
-                    border: Border.all(width: 2.0, color: Theme.of(context).primaryColor)),
-                child: Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Text(
-                    "Tvoje staty se změnily o:\nSleep: ${gameData.currentChanges['sleep']} Money: ${gameData.currentChanges['money']}\nHappiness: ${gameData.currentChanges['happiness']} PeerPop: ${gameData.currentChanges['peerPopularity']}\nParentPop: ${gameData.currentChanges['parentPopularity']} TeacherPop: ${gameData.currentChanges['teacherPopularity']}. Odemkl jsi skill ${gameData.currentChanges['skillsUnlocked']}",
-                    style: Theme.of(context).textTheme.body1,
+                Image.asset(
+                  currentEvent.imagePath,
+                  height: 300,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.0),
+                      border: Border.all(width: 2.0, color: Theme.of(context).primaryColor)),
+                  child: Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Text(
+                      sentence,
+                      style: Theme.of(context).textTheme.body1,
+                    ),
                   ),
                 ),
-              ),
-              FloatingActionButton(
-                child: Icon(
-                    Icons.check,
-                    size: 35,
-                    color: Theme.of(context).backgroundColor,),
-                backgroundColor: Theme.of(context).primaryColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                onPressed: () {
-                  EncounterSubmit();
-                },
-              ),
-            ],
-          ),
-        )
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.0),
+                      border: Border.all(width: 2.0, color: Theme.of(context).primaryColor)),
+                  child: Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Text(
+                      "Tvoje staty se změnily o:\nSleep: ${gameData.currentChanges['sleep']} Money: ${gameData.currentChanges['money']}\nHappiness: ${gameData.currentChanges['happiness']} PeerPop: ${gameData.currentChanges['peerPopularity']}\nParentPop: ${gameData.currentChanges['parentPopularity']} TeacherPop: ${gameData.currentChanges['teacherPopularity']}. Odemkl jsi skill ${gameData.currentChanges['skillsUnlocked']}",
+                      style: Theme.of(context).textTheme.body1,
+                    ),
+                  ),
+                ),
+                FloatingActionButton(
+                  child: Icon(
+                      Icons.check,
+                      size: 35,
+                      color: Theme.of(context).backgroundColor,),
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                  onPressed: () {
+                    EncounterSubmit();
+                  },
+                ),
+              ],
+            ),
+          )
+      ),
     );
   }
 }

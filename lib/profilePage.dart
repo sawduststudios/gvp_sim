@@ -55,6 +55,13 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Text('Odpoledne',
         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,),),
         centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                  Icons.settings
+              ),
+              onPressed: () {Navigator.pushNamed(context, '/SettingsPage');},
+            )]
       ),
       body: SafeArea(
         child: Padding(

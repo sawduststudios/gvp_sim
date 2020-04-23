@@ -16,6 +16,13 @@ class SkillChanger extends StatelessWidget {
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,),
         ),
         centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                  Icons.settings
+              ),
+              onPressed: () {Navigator.pushNamed(context, '/SettingsPage');},
+            )]
         ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,

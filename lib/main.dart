@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'database/moor_database.dart';
 import 'package:gvp_sim_db/EncounterEnd.dart';
 import 'theme_stuff/ThemeModel.dart';
+import 'SettingsPage.dart';
 
 //todo: Zprovoznit celý gameloop
 void main() => runApp(
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
           '/Encounter': (context) => Encounter(),
           '/ProfilePage': (context) => ProfilePage(),
           '/SkillPage': (context) => SkillPage(),
+          '/SettingsPage': (context) => SettingsPage(),
         },
         theme: Provider.of<ThemeModel>(context).currentTheme,
         title: 'GVP Simulator',

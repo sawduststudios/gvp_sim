@@ -22,6 +22,13 @@ class _SkillPageState extends State<SkillPage> {
         title: Text('Schopnosti',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,),),
         centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                  Icons.settings
+              ),
+              onPressed: () {Navigator.pushNamed(context, '/SettingsPage');},
+            )]
       ),
       body: StreamBuilder(
           stream: db.watchOrderedSkills(),

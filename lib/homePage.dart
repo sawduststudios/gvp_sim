@@ -13,17 +13,13 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(
-                    Icons.settings
-                ),
-                onPressed: () {print('settings clicked');},
-              )
-            ],
-          )
+          actions: <Widget>[
+            IconButton(
+            icon: Icon(
+                Icons.settings
+            ),
+            onPressed: () {Navigator.pushNamed(context, '/SettingsPage');},
+          )]
       ),
       body: Center(
         child: Column(
@@ -90,20 +86,6 @@ class HomePage extends StatelessWidget {
             ),
             SizedBox(
               height: 15,
-            ),
-            MaterialButton(
-              minWidth: 180,
-              color: Theme.of(context).primaryColor,
-              child: Text('ZMĚŇ THEME',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Theme.of(context).backgroundColor,
-                ),),
-              onPressed: () {
-                GameData gameData = Provider.of<GameData>(context, listen: false);
-                Provider.of<ThemeModel>(context, listen:false).toggleTheme();
-                gameData.isGvpTheme ? gameData.isGvpTheme = false : gameData.isGvpTheme = true;
-                },
             ),
           ],
         ),
