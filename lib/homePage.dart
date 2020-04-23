@@ -3,6 +3,7 @@ import 'package:gvp_sim_db/database/moor_database.dart';
 import 'package:gvp_sim_db/database/dataStorage.dart';
 import 'package:provider/provider.dart';
 import 'gameData.dart';
+import 'theme_stuff/ThemeModel.dart';
 
 class HomePage extends StatelessWidget {
   //HomePage({Key key}): super(key : key);
@@ -10,6 +11,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -28,6 +30,7 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            SizedBox(height: 40,),
             Text(
               'GVP SIMULATOR',
               style: TextStyle(
@@ -43,32 +46,36 @@ class HomePage extends StatelessWidget {
               height: 150,
             ),
             SizedBox(
-              height: 20,
+              height:40,
             ),
             MaterialButton(
-              color: Colors.grey[400],
+              minWidth: 180,
+              color: Theme.of(context).primaryColor,
               child: Text(
                 'CONTINUE',
                 style: TextStyle(
                   fontSize: 24,
+                  color: Theme.of(context).backgroundColor,
                 ),
               ),
               onPressed: () {
                 AppDatabase db = Provider.of<AppDatabase>(context, listen: false);
-                GameData _gameData = Provider.of<GameData>(context, listen: false);
+                GameData gameData = Provider.of<GameData>(context, listen: false);
                 //_gameData.sleep = 30;
-                _gameData.loadFromDatabase(db);
-                Navigator.pushNamed(context, '/Encounter');},
+                gameData.loadFromDatabase(db);
+                Navigator.pushNamed(context, gameData.savedPosition['page']);},
             ),
             SizedBox(
-              height: 30,
+              height: 15,
             ),
             MaterialButton(
-              color: Colors.grey[400],
+              minWidth: 180,
+              color: Theme.of(context).primaryColor,
               child: Text(
                 'NEW GAME',
                 style: TextStyle(
                   fontSize: 24,
+                  color: Theme.of(context).backgroundColor,
                 ),
               ),
               onPressed: () async {
@@ -79,6 +86,23 @@ class HomePage extends StatelessWidget {
                   dumpSkills(database);
                 }
                 Navigator.pushNamed(context, '/ProfilePage');
+                },
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            MaterialButton(
+              minWidth: 180,
+              color: Theme.of(context).primaryColor,
+              child: Text('ZMĚŇ THEME',
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Theme.of(context).backgroundColor,
+                ),),
+              onPressed: () {
+                GameData gameData = Provider.of<GameData>(context, listen: false);
+                Provider.of<ThemeModel>(context, listen:false).toggleTheme();
+                gameData.isGvpTheme ? gameData.isGvpTheme = false : gameData.isGvpTheme = true;
                 },
             ),
           ],

@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:gvp_sim_db/EncounterEnd.dart';
 import 'package:gvp_sim_db/buttonData.dart';
+import 'package:gvp_sim_db/database/moor_database.dart';
 import 'package:gvp_sim_db/gameData.dart';
 import 'database/dataStorage.dart';
 import 'dart:math';
@@ -21,7 +24,7 @@ class _State extends State<Encounter> {
     _currentEvent =
         DataStorage.events[new Random().nextInt(DataStorage.EVENTCOUNT)];
 
-    return Dialogue(firstEvent: _currentEvent);
+    return Scaffold(body: Dialogue(firstEvent: _currentEvent));
   }
 }
 
@@ -44,6 +47,7 @@ class _DialogueState extends State<Dialogue> {
 
   @override
   Widget build(BuildContext context) {
+
     void _advance(ButtonData data) {
       if (data.isFinal) {
         Navigator.push(
@@ -65,7 +69,7 @@ class _DialogueState extends State<Dialogue> {
 
     return SafeArea(
         child: Container(
-      color: Colors.white,
+      color: Theme.of(context).backgroundColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,8 +77,8 @@ class _DialogueState extends State<Dialogue> {
           Text(
             widget.firstEvent.personName,
             style: TextStyle(
-              fontSize: 26,
               color: Colors.black,
+              fontSize: 35,
               fontWeight: FontWeight.bold,
               decoration: TextDecoration.none,
             ),
@@ -86,16 +90,12 @@ class _DialogueState extends State<Dialogue> {
           Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4.0),
-                border: Border.all(width: 2.0, color: Colors.black)),
+                border: Border.all(width: 2.0, color: Theme.of(context).primaryColor)),
             child: Padding(
               padding: EdgeInsets.all(5.0),
               child: Text(
                 _currentState.sentence,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  decoration: TextDecoration.none,
-                ),
+                style: Theme.of(context).textTheme.body1,
               ),
             ),
           ),
@@ -141,8 +141,12 @@ class ReactionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void updateStats(Map changeList) {
+
+    void applyEffects(Map changeList, String unlock) async{
       GameData gameData = Provider.of<GameData>(context, listen: false);
+      AppDatabase db = Provider.of<AppDatabase>(context, listen: false);
+
+      //meni staty
       changeList.keys.forEach((key) {
         switch (key) {
           case 'sleep':
@@ -171,19 +175,48 @@ class ReactionButton extends StatelessWidget {
             break;
         }
       });
+      //odemyka skill
+      if (unlock != 'none') {
+        Skill loadedSkill = await db.skillById(unlock);
+        if (loadedSkill.available == false) {
+        db.updateSkill(loadedSkill.copyWith(available: true));
+        gameData.currentChanges['skillsUnlocked'].add(unlock);
+        print('$unlock skill unlocked');}
+      }
+    }
+
+    Future<bool> reqMet (ButtonData data) async{
+      bool met = false;
+      AppDatabase db = Provider.of<AppDatabase>(context, listen: false);
+      Skill reqSkill = await db.skillById(source.requirements[0]);
+      if (reqSkill.currentLevel >= data.requirements[1]) {met = true;}
+      return met;
     }
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.0),
       child: FlatButton(
         padding: EdgeInsets.all(5.0),
-        color: Colors.blue,
+        color: Theme.of(context).primaryColor,
         child: Text(
           source.text,
+          style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white),
         ),
-        onPressed: () {
-          updateStats(source.effects);
-          advance(source);
+        onPressed: () async{
+          if (source.requirements == null) {
+            applyEffects(source.effects, source.unlocksSkill);
+            advance(source);
+          }
+          else{
+            bool isOk = await reqMet(source);
+            if (isOk) {
+              applyEffects(source.effects, source.unlocksSkill);
+              advance(source);}
+            else{
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text("Nemas ${source.requirements[0]} na urovni ${source.requirements[1]}"),
+              ),);
+          }}
         },
       ),
     );

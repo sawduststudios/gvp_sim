@@ -8,47 +8,44 @@ part 'moor_database.g.dart';
 
 class GameDataSaves extends Table{
   IntColumn get id => integer()();
-  IntColumn get sleep => integer().nullable()();
-  IntColumn get money => integer().nullable()();
-  IntColumn get happiness => integer().nullable()();
-  IntColumn get peerPopularity => integer().nullable()();
-  IntColumn get parentPopularity => integer().nullable()();
-  IntColumn get teacherPopularity => integer().nullable()();
+  IntColumn get sleep => integer()();
+  IntColumn get money => integer()();
+  IntColumn get happiness => integer()();
+  IntColumn get peerPopularity => integer()();
+  IntColumn get parentPopularity => integer()();
+  IntColumn get teacherPopularity => integer()();
+  TextColumn get activeSkill1 => text().nullable()();
+  TextColumn get activeSkill2 => text().nullable()();
+  TextColumn get activeSkill3 => text().nullable()();
+  TextColumn get savedPosition => text().map(const MapConvertor())();
 
   @override
   Set<Column> get primaryKey => {id};
 }
 
-
-//todo: Přidat možost ovlivnit gamedata
-//todo: Přidat možnost požadavku na staty
-//Convertor pro EventStates
-class ButtonDataConvertor extends TypeConverter<ButtonData, String> {
-  const ButtonDataConvertor();
+class MapConvertor extends TypeConverter<Map<String, String>, String> {
+  const MapConvertor();
 
   @override
-  ButtonData mapToDart(String dbString) {
+  Map<String, String> mapToDart(String dbString) {
     if (dbString == null) {
       return null;
     }
-    List<String> dataList = dbString.split(',');
-
-    return new ButtonData(text: dataList[0],
-        nextID: int.parse(dataList[1]),
-        isFinal: dataList[2] == "true");
+    List<String> KeyValuePairs = dbString.split(',');
+    return new Map<String, String>.fromIterable(
+      KeyValuePairs,
+      key: (i) => i.split(' ')[0],
+      value: (i) => i.split(' ')[1],
+    );
   }
 
   @override
-  String mapToSql(ButtonData data) {
-    if (data == null) {
+  String mapToSql(Map<String, String> savedPosition) {
+    if (savedPosition == null) {
       return null;
     }
-    List<String> dataList = [
-      data.text,
-      data.nextID.toString(),
-      data.isFinal ? "true" : "false"
-    ];
-    return dataList.join(',');
+    List KeyValuePairs = savedPosition.keys.map((i) => "$i ${savedPosition[i]}").toList();
+    return KeyValuePairs.join(',');
   }
 }
 
@@ -57,8 +54,9 @@ class Skills extends Table{
   TextColumn get iconName => text()();
   IntColumn get currentLevel => integer()();
   IntColumn get currentHours => integer()();
-  TextColumn get levelUp => text().map(const IntListConverter()).nullable()();
+  TextColumn get levelUp => text().map(const IntListConverter())();
   BoolColumn get available => boolean()();//default value false
+  BoolColumn get isMax => boolean().nullable().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {name};
@@ -112,8 +110,8 @@ class AppDatabase extends _$AppDatabase {
   Future insertSkill(Skill skill) => into(skills).insert(skill);
   Future updateSkill(Skill skill) => update(skills).replace(skill);
   Future deleteSkill(Skill skill) => delete(skills).delete(skill);
-  Stream<Skill> skillById(String name) {
-    return (select(skills)..where((t) => t.name.equals(name))).watchSingle();
+  Future<Skill> skillById(String name) {
+    return (select(skills)..where((t) => t.name.equals(name))).getSingle();
   }
   Stream<List<Skill>> watchOrderedSkills() => (select(skills)
     ..orderBy([

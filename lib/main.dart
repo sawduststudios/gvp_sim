@@ -8,21 +8,24 @@ import 'package:moor_flutter/moor_flutter.dart';
 import 'package:provider/provider.dart';
 import 'database/moor_database.dart';
 import 'package:gvp_sim_db/EncounterEnd.dart';
+import 'theme_stuff/ThemeModel.dart';
 
 //todo: Zprovoznit celý gameloop
-void main() => runApp(MyApp());
+void main() => runApp(
+MultiProvider(
+providers:[
+Provider<AppDatabase>(create: (_) => AppDatabase()),
+ChangeNotifierProvider<GameData>(create: (_) => GameData()),
+ChangeNotifierProvider<ThemeModel>(create: (_) => ThemeModel()),
+],
+child: MyApp()));
 
 class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
 
-    return MultiProvider(
-      providers:[
-        Provider<AppDatabase>(create: (_) => AppDatabase()),
-        ChangeNotifierProvider<GameData>(create: (_) => GameData()),
-      ],
-      child: MaterialApp(
+    return MaterialApp(
         initialRoute: '/',
         routes: {
           '/': (context) => HomePage(),
@@ -30,7 +33,8 @@ class MyApp extends StatelessWidget {
           '/ProfilePage': (context) => ProfilePage(),
           '/SkillPage': (context) => SkillPage(),
         },
-      ),
-    );
+        theme: Provider.of<ThemeModel>(context).currentTheme,
+        title: 'GVP Simulator',
+      );
   }
 }

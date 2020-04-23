@@ -5,11 +5,27 @@ import 'package:gvp_sim_db/eventState.dart';
 
 class DataStorage {
 
-  static const SKILLCOUNT = 9;
+  static const SKILLCOUNT = 11;
   static const EVENTCOUNT = 2;
   static const EVENTSTATECOUNT = 4;
 
   static List<Skill> skills = [
+    Skill(
+      name: "Seriousness",
+      iconName: "guitar",
+      currentHours: 0,
+      currentLevel: 0,
+      levelUp: [3,5,7],
+      available: true,
+    ),
+    Skill(
+      name: "Nonjokingness",
+      iconName: "guitar",
+      currentHours: 0,
+      currentLevel: 0,
+      levelUp: [6,10,13],
+      available: true,
+    ),
     Skill(
       name: "kytara",
       iconName: "guitar",
@@ -48,7 +64,7 @@ class DataStorage {
       currentHours: 6,
       currentLevel: 3,
       levelUp: [1,2,3,4],
-      available: true,
+      available: false,
     ),
     Skill(
       name: "chugging",
@@ -64,7 +80,7 @@ class DataStorage {
       currentHours: 2,
       currentLevel: 1,
       levelUp: [1,2,8],
-      available: true,
+      available: false,
     ),
     Skill(
       name: "Plebbing",
@@ -103,26 +119,26 @@ class DataStorage {
     EventState(
       id: 10010,
       sentence: "ten fokin sentence",
-      butt1: ButtonData(text: '1', nextID: 10011),
-      butt2: ButtonData(text: '2', nextID: 10011),
+      butt1: ButtonData(text: 'PingPong', nextID: 10011, unlocksSkill: "PingPong"),
+      butt2: ButtonData(text: 'sikana', nextID: 10011, unlocksSkill: "sikana"),
       butt3: ButtonData(text: '3', nextID: 10011),
       butt4: ButtonData(text: '4', nextID: 10011),
     ),
     EventState(
       id: 10011,
       sentence: "OMAE WA MO - SHINDEIRU! NANI?!?!?",
-      butt1: ButtonData(text: 'die', nextID: 10010, effects: {'happiness': -5}),
-      butt2: ButtonData(text: 'hard', nextID: 10010, isFinal: true, finalSentence: "We are done"),
-      butt3: ButtonData(text: 'harder', nextID: 10010),
-      butt4: ButtonData(text: 'daddy', nextID: 10010),
+      butt1: ButtonData(text: 'happ -5', nextID: 10010, effects: {'happiness': -5}),
+      butt2: ButtonData(text: 'final', nextID: 10010, isFinal: true, finalSentence: "We are done"),
+      butt3: ButtonData(text: 'happ +5, req y', nextID: 10010, effects: {'happiness': 5}, requirements: ['Fotbal', 2]),
+      butt4: ButtonData(text: 'req no', nextID: 10010, requirements: ['Fotbal', 4], effects: {'sleep': 5}),
     ),
     EventState(
       id: 10110,
       sentence: "Mnau1",
-      butt1: ButtonData(text: 'die', nextID: 10111),
-      butt2: ButtonData(text: 'hard', nextID: 10111),
+      butt1: ButtonData(text: 'PingPong', nextID: 10111, unlocksSkill: "PingPong"),
+      butt2: ButtonData(text: 'sikana', nextID: 10111, unlocksSkill: "sikana"),
       butt3: ButtonData(text: 'harder', nextID: 10111),
-      butt4: ButtonData(text: 'daddy', nextID: 10111),
+      butt4: ButtonData(text: 'final', nextID: 10111, isFinal: true, finalSentence: "Mnau is done"),
     ),
     EventState(
       id: 10111,
