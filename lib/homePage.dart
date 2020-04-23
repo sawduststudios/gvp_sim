@@ -26,7 +26,6 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 40,),
             Text(
               'GVP SIMULATOR',
               style: TextStyle(
@@ -35,14 +34,14 @@ class HomePage extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 40,
             ),
             Image.asset(
               'images/sova.jpg',
               height: 150,
             ),
             SizedBox(
-              height:40,
+              height:80,
             ),
             MaterialButton(
               minWidth: 180,

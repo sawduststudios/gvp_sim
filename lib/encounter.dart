@@ -99,15 +99,19 @@ class _DialogueState extends State<Dialogue> {
             widget.firstEvent.imagePath,
             height: 300,
           ),
-          Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4.0),
-                border: Border.all(width: 2.0, color: Theme.of(context).primaryColor)),
-            child: Padding(
-              padding: EdgeInsets.all(5.0),
-              child: Text(
-                _currentState.sentence,
-                style: Theme.of(context).textTheme.body1,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4.0),
+                  border: Border.all(width: 2.0, color: Theme.of(context).primaryColor)),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 8.0),
+                child: Text(
+                  _currentState.sentence,
+                  style: Theme.of(context).textTheme.body1,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ),
@@ -226,7 +230,8 @@ class ReactionButton extends StatelessWidget {
               advance(source);}
             else{
               Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text("Nemas ${source.requirements[0]} na urovni ${source.requirements[1]}"),
+                backgroundColor: Colors.grey[900],
+                content: Text("Nemas ${source.requirements[0]} na urovni ${source.requirements[1]}", style: TextStyle(color: Colors.white),),
               ),);
           }}
         },

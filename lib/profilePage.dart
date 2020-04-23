@@ -4,6 +4,7 @@ import 'package:gvp_sim_db/gameData.dart';
 import 'package:provider/provider.dart';
 import 'package:swipedetector/swipedetector.dart';
 import 'database/dataStorage.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -68,7 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Padding(
           padding: EdgeInsets.all(5.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               SizedBox(height: 15,),
               Container(
@@ -129,39 +130,41 @@ class _ProfilePageState extends State<ProfilePage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).primaryColor,
-        shape: CircularNotchedRectangle(),
-        notchMargin: 4.0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.assignment,
-                color: Colors.white,
-                size: 30,
+      bottomNavigationBar: Builder(
+        builder: (context) => BottomAppBar(
+          color: Theme.of(context).primaryColor,
+          shape: CircularNotchedRectangle(),
+          notchMargin: 4.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.assignment,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.grey[900],
+                    content: Text("Na implementaci funkce 'úkolníček' v Sawdust Studios pilně pracujeme...", style: TextStyle(color: Colors.white),),
+                  ),);
+                },
               ),
-              onPressed: () {
-                final _gameData = Provider.of<GameData>(context, listen: false);
-                final db = Provider.of<AppDatabase>(context, listen: false);
-                _gameData.sleep -= 10;
-                _gameData.saveToDatabase(db);
-              },
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.person,
-                color: Colors.white,
-                size: 30,
+              IconButton(
+                icon: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () {
+                  //TODO resetovat hodiny
+                  Navigator.pushNamed(context, "/SkillPage");
+                },
               ),
-              onPressed: () {
-                //TODO resetovat hodiny
-                Navigator.pushNamed(context, "/SkillPage");
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -331,7 +334,7 @@ class _SkillBoxState extends State<SkillBox> {
         horizontalSwipeMinVelocity: 1.0,
       ),
       child: Padding(
-        padding: EdgeInsets.all(5.0),
+        padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 25.0),
         child: AspectRatio(
           aspectRatio: 1 / 1,
           child: Container(
@@ -358,7 +361,7 @@ class _SkillBoxState extends State<SkillBox> {
                 Expanded(
                   child: Icon(
                     (DataStorage.skillIcons.keys.contains(activeSkill.name)) ? DataStorage.skillIcons[activeSkill.name] : Icons.money_off,
-                    size: 60,
+                    size: 45,
                     color: Theme.of(context).primaryColor,
                   ),
                 ),

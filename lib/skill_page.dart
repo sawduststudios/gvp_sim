@@ -6,6 +6,7 @@ import 'package:moor/moor.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'gameData.dart';
 import 'database/dataStorage.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class SkillPage extends StatefulWidget {
   @override
@@ -94,7 +95,7 @@ class SkillTile extends StatelessWidget {
             leading: Icon(
               (DataStorage.skillIcons.keys.contains(shownSkill.name)) ? DataStorage.skillIcons[shownSkill.name] : Icons.money_off,
               size: 60,
-              color: Theme.of(context).primaryColor,
+              color: (shownSkill.available) ? ((gameData.isGvpTheme) ? Colors.blue[900] : Colors.orange[900]) : Colors.grey[800],
             ), //FlutterLogo(size: 72.0),
             onTap: () {},
             title: Text("${shownSkill.name}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),

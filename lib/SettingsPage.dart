@@ -15,13 +15,6 @@ class SettingsPage extends StatelessWidget {
         title: Text('Nastavení',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,),),
         centerTitle: true,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                  Icons.settings
-              ),
-              onPressed: () {Navigator.pushNamed(context, '/SettingsPage');},
-            )]
       ),
       body: Center(
         child: Column(

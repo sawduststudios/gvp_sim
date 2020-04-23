@@ -32,7 +32,7 @@ class EncounterEnd extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         Future.value(
-            false); //return a `Future` with false value so this route cant be popped or closed.
+            false);
       },
       child: SafeArea(
           child: Container(
@@ -54,15 +54,18 @@ class EncounterEnd extends StatelessWidget {
                   currentEvent.imagePath,
                   height: 300,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4.0),
-                      border: Border.all(width: 2.0, color: Theme.of(context).primaryColor)),
-                  child: Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: Text(
-                      sentence,
-                      style: Theme.of(context).textTheme.body1,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: Border.all(width: 2.0, color: Theme.of(context).primaryColor)),
+                    child: Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(
+                        sentence,
+                        style: Theme.of(context).textTheme.body1,
+                      ),
                     ),
                   ),
                 ),
@@ -71,10 +74,11 @@ class EncounterEnd extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4.0),
                       border: Border.all(width: 2.0, color: Theme.of(context).primaryColor)),
                   child: Padding(
-                    padding: EdgeInsets.all(5.0),
+                    padding: EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 8.0),
                     child: Text(
-                      "Tvoje staty se změnily o:\nSleep: ${gameData.currentChanges['sleep']} Money: ${gameData.currentChanges['money']}\nHappiness: ${gameData.currentChanges['happiness']} PeerPop: ${gameData.currentChanges['peerPopularity']}\nParentPop: ${gameData.currentChanges['parentPopularity']} TeacherPop: ${gameData.currentChanges['teacherPopularity']}. Odemkl jsi skill ${gameData.currentChanges['skillsUnlocked']}",
+                      "Tvoje staty se změnily o:\nSleep: ${gameData.currentChanges['sleep']} Money: ${gameData.currentChanges['money']}\nHappiness: ${gameData.currentChanges['happiness']} PeerPop: ${gameData.currentChanges['peerPopularity']}\nParentPop: ${gameData.currentChanges['parentPopularity']} TeacherPop: ${gameData.currentChanges['teacherPopularity']}.\nOdemkl jsi skill ${gameData.currentChanges['skillsUnlocked']}",
                       style: Theme.of(context).textTheme.body1,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),

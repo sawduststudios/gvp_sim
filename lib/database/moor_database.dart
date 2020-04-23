@@ -102,6 +102,7 @@ class AppDatabase extends _$AppDatabase {
   //Queries pro GameDataSave
   Future insertGameData (GameDataSave gamedata) => into(gameDataSaves).insert(gamedata);
   Future updateGameData (GameDataSave gamedata) => update(gameDataSaves).replace(gamedata);
+  Future deleteGameData (GameDataSave gameData) => delete(gameDataSaves).delete(gameData);
   Future <List<GameDataSave>> getAllGameData() => select(gameDataSaves).get();
 
   //Queries pro Skills

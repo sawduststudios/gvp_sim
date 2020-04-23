@@ -12,7 +12,7 @@ class SkillChanger extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Nahradit skillem: ${(newSkill.name)}",
+          "Změna schopností",
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold,),
         ),
         centerTitle: true,
@@ -41,7 +41,7 @@ class SkillChanger extends StatelessWidget {
               ),
               child: Padding(
                 padding: EdgeInsets.fromLTRB(5.0, 20.0, 5.0, 20.0),
-                child: Text("Pozor, hodiny uceni se na novy level budou ztraceny!", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold),),
+                child: Text("Pozor, hodiny uceni se na novy level budou ztraceny!\nNový skill bude: ${newSkill.name}", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold),),
               ),
             ),
           ),

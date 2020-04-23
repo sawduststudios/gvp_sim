@@ -103,7 +103,7 @@ class DataStorage {
   ];
 
   static  Map<String, IconData> skillIcons= {
-    'kytara' : Icons.add,
+    'kytara' : MdiIcons.guitarAcoustic,
     'Flutter' : Icons.calendar_view_day
   };
 
@@ -142,7 +142,7 @@ class DataStorage {
     ),
     EventState(
       id: 10110,
-      sentence: "Mnau1",
+      sentence: "DlouhejMnauDlouhejMnauDlouhejMnauDlouhejMnauDlouhejMnauDlouhejMnauDlouhejMnauDlouhejMnauDlouhejMnauDlouhejMnauDlouhejMnauDlouhejMnauDlouhejMnau1",
       butt1: ButtonData(text: 'PingPong', nextID: 10111, unlocksSkill: "PingPong"),
       butt2: ButtonData(text: 'sikana', nextID: 10111, unlocksSkill: "sikana"),
       butt3: ButtonData(text: 'harder', nextID: 10111),
