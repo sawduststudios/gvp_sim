@@ -83,9 +83,10 @@ class _DialogueState extends State<Dialogue> {
         child: Container(
       color: Theme.of(context).backgroundColor,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          SizedBox(height: 15,),
           Text(
             widget.firstEvent.personName,
             style: TextStyle(
@@ -95,10 +96,12 @@ class _DialogueState extends State<Dialogue> {
               decoration: TextDecoration.none,
             ),
           ),
+          SizedBox(height: 10,),
           Image.asset(
             widget.firstEvent.imagePath,
             height: 300,
           ),
+          Spacer(),
           Padding(
             padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
             child: Container(
@@ -115,6 +118,7 @@ class _DialogueState extends State<Dialogue> {
               ),
             ),
           ),
+          Spacer(),
           Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: [
@@ -143,7 +147,8 @@ class _DialogueState extends State<Dialogue> {
                 ],
               ),
             ],
-          )
+          ),
+          SizedBox(height: 10),
         ],
       ),
     ));

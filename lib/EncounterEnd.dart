@@ -14,8 +14,6 @@ class EncounterEnd extends StatelessWidget {
     void EncounterSubmit() {
       GameData gameData = Provider.of<GameData>(context, listen: false);
 
-      gameData.resetDailyHours();
-      print(gameData.sleep);
       gameData.dailyHours = 5;
       print(gameData.sleep);
 
@@ -41,6 +39,7 @@ class EncounterEnd extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+                SizedBox(height: 25,),
                 Text(
                   currentEvent.personName,
                   style: TextStyle(
@@ -50,10 +49,13 @@ class EncounterEnd extends StatelessWidget {
                     decoration: TextDecoration.none,
                   ),
                 ),
-                Image.asset(
-                  currentEvent.imagePath,
-                  height: 300,
+                SizedBox(height: 10,),
+                Expanded(
+                  child: Image.asset(
+                    currentEvent.imagePath,
+                  ),
                 ),
+                SizedBox(height: 15,),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
                   child: Container(
@@ -69,6 +71,7 @@ class EncounterEnd extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(height: 15,),
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4.0),
@@ -82,6 +85,7 @@ class EncounterEnd extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(height: 15,),
                 FloatingActionButton(
                   child: Icon(
                       Icons.check,
@@ -93,6 +97,7 @@ class EncounterEnd extends StatelessWidget {
                     EncounterSubmit();
                   },
                 ),
+                SizedBox(height: 10,),
               ],
             ),
           )

@@ -30,9 +30,10 @@ class _ProfilePageState extends State<ProfilePage> {
       print('GAME OVER, usnul jsi');
     }
     else {
-      if(gameData.sleep > 100) {
-        gameData.sleep = 100;
+      if (gameData.dailyHours > 0) {
+        gameData.sleep += gameData.dailyHours * 10;
       }
+
       gameData.alreadyLearned[0] = gameData.activeSkills[0].currentHours;
       gameData.alreadyLearned[1] = gameData.activeSkills[1].currentHours;
       gameData.alreadyLearned[2] = gameData.activeSkills[2].currentHours;
@@ -316,7 +317,7 @@ class _SkillBoxState extends State<SkillBox> {
       },
       onSwipeRight: () {
         if ((activeSkill.currentHours <
-            activeSkill.levelUp[activeSkill.currentLevel]) & (gameData.sleep > 0)) {
+            activeSkill.levelUp[activeSkill.currentLevel]) & (gameData.sleep > 0) & (gameData.dailyHours > -8)) {
           setState(() {
             int newHours = activeSkill.currentHours + 1;
             gameData.activeSkills[widget.activeSkillSlot] =

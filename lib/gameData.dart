@@ -12,7 +12,7 @@ class GameData with ChangeNotifier {
     'peerPopularity': 0,
     'parentPopularity': 0,
     'teacherPopularity': 0,
-    'skillsUnlocked' : [],
+    'skillsUnlocked': [],
   };
   Map<String, String> savedPosition = {
     'page': "/Encounter",
@@ -31,7 +31,7 @@ class GameData with ChangeNotifier {
       iconName: "guitar",
       currentHours: 0,
       currentLevel: 0,
-      levelUp: [3,5,7],
+      levelUp: [3, 5, 7],
       available: true,
     ),
     Skill(
@@ -39,7 +39,7 @@ class GameData with ChangeNotifier {
       iconName: "guitar",
       currentHours: 0,
       currentLevel: 0,
-      levelUp: [6,10,13],
+      levelUp: [6, 10, 13],
       available: true,
     ),
     Skill(
@@ -48,11 +48,10 @@ class GameData with ChangeNotifier {
         available: true,
         currentHours: 0,
         currentLevel: 0,
-        levelUp: [2,4]),
+        levelUp: [2, 4]),
   ];
   int _dailyHours = 0;
   List<int> _alreadyLearned = [0, 0, 0];
-
 
   int get sleep => _sleep;
   int get money => _money;
@@ -74,8 +73,12 @@ class GameData with ChangeNotifier {
 
   set sleep(int newValue) {
     if (newValue != _sleep) {
+      if (newValue > 100) {
+        _sleep = 100;
+      } else {
       _sleep = newValue;
       notifyListeners();
+      }
     }
   }
 
@@ -122,7 +125,7 @@ class GameData with ChangeNotifier {
 
   //todo: zmeny skillu se nijak neprojevuji v databazi
   set activeSkills(List<Skill> newValue) {
-    if(newValue != _activeSkills) {
+    if (newValue != _activeSkills) {
       _activeSkills = newValue;
 
       notifyListeners();
@@ -131,12 +134,12 @@ class GameData with ChangeNotifier {
 
   set dailyHours(int newValue) {
     if (newValue != _dailyHours && newValue >= -8) {
-
-      if(newValue < _dailyHours) {
-        sleep -= 10*(_dailyHours - newValue);
-      }
-      else {
-        sleep += 10*(newValue - _dailyHours);
+      if (newValue <= 0) {
+        if ((newValue < _dailyHours) && (newValue < 0)) {
+          sleep -= 10 * (_dailyHours - newValue);
+        } else if (newValue > _dailyHours) {
+          sleep += 10 * (newValue - _dailyHours);
+        }
       }
       _dailyHours = newValue;
       notifyListeners();
@@ -144,7 +147,7 @@ class GameData with ChangeNotifier {
   }
 
   set alreadyLearned(List<int> newValue) {
-    if(newValue != alreadyLearned) {
+    if (newValue != alreadyLearned) {
       _alreadyLearned = newValue;
       notifyListeners();
     }
@@ -165,9 +168,15 @@ class GameData with ChangeNotifier {
       _parentPopularity = toLoad.parentPopularity;
       _teacherPopularity = toLoad.teacherPopularity;
       //todo: skill neni vvzdy v databazi? pise to 'gamedata load from database failed'
-      if (await db.skillById(toLoad.activeSkill1) != null) {_activeSkills[0] = await db.skillById(toLoad.activeSkill1);}
-      if (await db.skillById(toLoad.activeSkill2) != null) {_activeSkills[1] = await db.skillById(toLoad.activeSkill2);}
-      if (await db.skillById(toLoad.activeSkill3) != null) {_activeSkills[2] = await db.skillById(toLoad.activeSkill3);}
+      if (await db.skillById(toLoad.activeSkill1) != null) {
+        _activeSkills[0] = await db.skillById(toLoad.activeSkill1);
+      }
+      if (await db.skillById(toLoad.activeSkill2) != null) {
+        _activeSkills[1] = await db.skillById(toLoad.activeSkill2);
+      }
+      if (await db.skillById(toLoad.activeSkill3) != null) {
+        _activeSkills[2] = await db.skillById(toLoad.activeSkill3);
+      }
     } else {
       print('gamedata load from database failed');
     }
@@ -203,12 +212,10 @@ class GameData with ChangeNotifier {
   }
 
   bool isGameOver() {
-    return (
-      _sleep <= 0 ||
-      _money <= 0 ||
-      _happiness <= 0 ||
-      (_peerPopularity + _parentPopularity + _teacherPopularity) <= 0
-    );
+    return (_sleep <= 0 ||
+        _money <= 0 ||
+        _happiness <= 0 ||
+        (_peerPopularity + _parentPopularity + _teacherPopularity) <= 0);
   }
 
   void gameOver(BuildContext context, AppDatabase db) {
@@ -236,7 +243,7 @@ class GameData with ChangeNotifier {
       'peerPopularity': 0,
       'parentPopularity': 0,
       'teacherPopularity': 0,
-      'skillsUnlocked' : [],
+      'skillsUnlocked': [],
     };
     savedPosition = {
       'page': "/Encounter",
@@ -254,7 +261,7 @@ class GameData with ChangeNotifier {
         iconName: "guitar",
         currentHours: 0,
         currentLevel: 0,
-        levelUp: [3,5,7],
+        levelUp: [3, 5, 7],
         available: true,
       ),
       Skill(
@@ -262,7 +269,7 @@ class GameData with ChangeNotifier {
         iconName: "guitar",
         currentHours: 0,
         currentLevel: 0,
-        levelUp: [6,10,13],
+        levelUp: [6, 10, 13],
         available: true,
       ),
       Skill(
@@ -271,7 +278,7 @@ class GameData with ChangeNotifier {
           available: true,
           currentHours: 0,
           currentLevel: 0,
-          levelUp: [2,4]),
+          levelUp: [2, 4]),
     ];
     _dailyHours = 0;
     _alreadyLearned = [0, 0, 0];
@@ -280,8 +287,9 @@ class GameData with ChangeNotifier {
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => GameOverPage(reason: 'DefaultReason',)
-        ),
+            builder: (context) => GameOverPage(
+                  reason: 'DefaultReason',
+                )),
         ModalRoute.withName('/HomePage'));
   }
 }
