@@ -67,6 +67,7 @@ class EncounterEnd extends StatelessWidget {
                       child: Text(
                         sentence,
                         style: Theme.of(context).textTheme.body1,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),

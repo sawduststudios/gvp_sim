@@ -30,6 +30,7 @@ class SettingsPage extends StatelessWidget {
                   color: Theme.of(context).backgroundColor,
                 ),),
               onPressed: () {
+                Navigator.pushNamed(context, '/TutorialPage');
               },
             ),
             SizedBox(height: 15,),

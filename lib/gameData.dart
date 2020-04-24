@@ -20,35 +20,33 @@ class GameData with ChangeNotifier {
 
   bool _isGvpTheme = true;
   int _sleep = 50;
-  int _money = 50;
+  int _money = 0;
   int _happiness = 50;
   int _peerPopularity = 20;
   int _parentPopularity = 20;
   int _teacherPopularity = 20;
   List<Skill> _activeSkills = [
     Skill(
-      name: "Seriousness",
-      iconName: "guitar",
+      name: "Kytara",
       currentHours: 0,
-      currentLevel: 0,
-      levelUp: [3, 5, 7],
+      currentLevel: 2,
+      levelUp: [5,3,5,18],
       available: true,
     ),
     Skill(
-      name: "Nonjokingness",
-      iconName: "guitar",
+      name: 'Flutter',
       currentHours: 0,
-      currentLevel: 0,
-      levelUp: [6, 10, 13],
+      currentLevel: 3,
+      levelUp: [5,8,10,15,25,80],
       available: true,
     ),
     Skill(
-        name: 'test skill 3',
-        iconName: 'dummyicon',
-        available: true,
-        currentHours: 0,
-        currentLevel: 0,
-        levelUp: [2, 4]),
+      name: "Fotbal",
+      currentHours: 0,
+      currentLevel: 3,
+      levelUp: [3,5,8,10,15],
+      available: true,
+    ),
   ];
   int _dailyHours = 0;
   List<int> _alreadyLearned = [0, 0, 0];
@@ -257,28 +255,26 @@ class GameData with ChangeNotifier {
     _teacherPopularity = 20;
     _activeSkills = [
       Skill(
-        name: "Seriousness",
-        iconName: "guitar",
+        name: "Kytara",
         currentHours: 0,
-        currentLevel: 0,
-        levelUp: [3, 5, 7],
+        currentLevel: 2,
+        levelUp: [5,3,5,18],
         available: true,
       ),
       Skill(
-        name: "Nonjokingness",
-        iconName: "guitar",
+        name: 'Flutter',
         currentHours: 0,
-        currentLevel: 0,
-        levelUp: [6, 10, 13],
+        currentLevel: 3,
+        levelUp: [5,8,10,15,25,80],
         available: true,
       ),
       Skill(
-          name: 'test skill 3',
-          iconName: 'dummyicon',
-          available: true,
-          currentHours: 0,
-          currentLevel: 0,
-          levelUp: [2, 4]),
+        name: "Fotbal",
+        currentHours: 0,
+        currentLevel: 3,
+        levelUp: [3,5,8,10,15],
+        available: true,
+      ),
     ];
     _dailyHours = 0;
     _alreadyLearned = [0, 0, 0];

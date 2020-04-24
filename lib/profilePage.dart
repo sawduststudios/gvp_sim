@@ -34,6 +34,9 @@ class _ProfilePageState extends State<ProfilePage> {
         gameData.sleep += gameData.dailyHours * 10;
       }
 
+      gameData.money+=1;
+      if (gameData.money > 2) {gameData.money=0;}
+
       gameData.alreadyLearned[0] = gameData.activeSkills[0].currentHours;
       gameData.alreadyLearned[1] = gameData.activeSkills[1].currentHours;
       gameData.alreadyLearned[2] = gameData.activeSkills[2].currentHours;

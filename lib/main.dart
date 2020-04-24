@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gvp_sim_db/TutorialPage.dart';
 import 'package:gvp_sim_db/encounter.dart';
 import 'package:gvp_sim_db/gameData.dart';
 import 'package:gvp_sim_db/homePage.dart';
@@ -33,11 +34,12 @@ void main() {
   return MaterialApp(
   initialRoute: '/',
   routes: {
-  '/': (context) => HomePage(),
-  '/Encounter': (context) => Encounter(),
-  '/ProfilePage': (context) => ProfilePage(),
-  '/SkillPage': (context) => SkillPage(),
-  '/SettingsPage': (context) => SettingsPage(),
+    '/': (context) => HomePage(),
+    '/Encounter': (context) => Encounter(),
+    '/ProfilePage': (context) => ProfilePage(),
+    '/SkillPage': (context) => SkillPage(),
+    '/SettingsPage': (context) => SettingsPage(),
+    '/TutorialPage': (context) => TutorialPage(),
   },
   theme: Provider.of<ThemeModel>(context).currentTheme,
   title: 'GVP Simulator',

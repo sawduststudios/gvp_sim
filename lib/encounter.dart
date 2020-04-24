@@ -22,7 +22,7 @@ class _State extends State<Encounter> {
   @override
   Widget build(BuildContext context) {
     _currentEvent =
-        DataStorage.events[new Random().nextInt(DataStorage.EVENTCOUNT)];
+        DataStorage.events[Provider.of<GameData>(context, listen: false).money];
 
     return Scaffold(
         appBar: AppBar(title: Text('Dopoledne',
@@ -98,9 +98,9 @@ class _DialogueState extends State<Dialogue> {
           ),
           SizedBox(height: 10,),
           Image.asset(
-            widget.firstEvent.imagePath,
-            height: 300,
-          ),
+              widget.firstEvent.imagePath,
+              height: 250,
+            ),
           Spacer(),
           Padding(
             padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
