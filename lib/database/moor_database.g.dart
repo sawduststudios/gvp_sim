@@ -9,7 +9,6 @@ part of 'moor_database.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
 class Skill extends DataClass implements Insertable<Skill> {
   final String name;
-  final String iconName;
   final int currentLevel;
   final int currentHours;
   final List<int> levelUp;
@@ -17,7 +16,6 @@ class Skill extends DataClass implements Insertable<Skill> {
   final bool isMax;
   Skill(
       {@required this.name,
-      @required this.iconName,
       @required this.currentLevel,
       @required this.currentHours,
       @required this.levelUp,
@@ -31,8 +29,6 @@ class Skill extends DataClass implements Insertable<Skill> {
     final boolType = db.typeSystem.forDartType<bool>();
     return Skill(
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
-      iconName: stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}icon_name']),
       currentLevel: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}current_level']),
       currentHours: intType
@@ -49,7 +45,6 @@ class Skill extends DataClass implements Insertable<Skill> {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return Skill(
       name: serializer.fromJson<String>(json['name']),
-      iconName: serializer.fromJson<String>(json['iconName']),
       currentLevel: serializer.fromJson<int>(json['currentLevel']),
       currentHours: serializer.fromJson<int>(json['currentHours']),
       levelUp: serializer.fromJson<List<int>>(json['levelUp']),
@@ -62,7 +57,6 @@ class Skill extends DataClass implements Insertable<Skill> {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'name': serializer.toJson<String>(name),
-      'iconName': serializer.toJson<String>(iconName),
       'currentLevel': serializer.toJson<int>(currentLevel),
       'currentHours': serializer.toJson<int>(currentHours),
       'levelUp': serializer.toJson<List<int>>(levelUp),
@@ -75,9 +69,6 @@ class Skill extends DataClass implements Insertable<Skill> {
   SkillsCompanion createCompanion(bool nullToAbsent) {
     return SkillsCompanion(
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      iconName: iconName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(iconName),
       currentLevel: currentLevel == null && nullToAbsent
           ? const Value.absent()
           : Value(currentLevel),
@@ -97,7 +88,6 @@ class Skill extends DataClass implements Insertable<Skill> {
 
   Skill copyWith(
           {String name,
-          String iconName,
           int currentLevel,
           int currentHours,
           List<int> levelUp,
@@ -105,7 +95,6 @@ class Skill extends DataClass implements Insertable<Skill> {
           bool isMax}) =>
       Skill(
         name: name ?? this.name,
-        iconName: iconName ?? this.iconName,
         currentLevel: currentLevel ?? this.currentLevel,
         currentHours: currentHours ?? this.currentHours,
         levelUp: levelUp ?? this.levelUp,
@@ -116,7 +105,6 @@ class Skill extends DataClass implements Insertable<Skill> {
   String toString() {
     return (StringBuffer('Skill(')
           ..write('name: $name, ')
-          ..write('iconName: $iconName, ')
           ..write('currentLevel: $currentLevel, ')
           ..write('currentHours: $currentHours, ')
           ..write('levelUp: $levelUp, ')
@@ -130,19 +118,16 @@ class Skill extends DataClass implements Insertable<Skill> {
   int get hashCode => $mrjf($mrjc(
       name.hashCode,
       $mrjc(
-          iconName.hashCode,
+          currentLevel.hashCode,
           $mrjc(
-              currentLevel.hashCode,
-              $mrjc(
-                  currentHours.hashCode,
-                  $mrjc(levelUp.hashCode,
-                      $mrjc(available.hashCode, isMax.hashCode)))))));
+              currentHours.hashCode,
+              $mrjc(levelUp.hashCode,
+                  $mrjc(available.hashCode, isMax.hashCode))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Skill &&
           other.name == this.name &&
-          other.iconName == this.iconName &&
           other.currentLevel == this.currentLevel &&
           other.currentHours == this.currentHours &&
           other.levelUp == this.levelUp &&
@@ -152,7 +137,6 @@ class Skill extends DataClass implements Insertable<Skill> {
 
 class SkillsCompanion extends UpdateCompanion<Skill> {
   final Value<String> name;
-  final Value<String> iconName;
   final Value<int> currentLevel;
   final Value<int> currentHours;
   final Value<List<int>> levelUp;
@@ -160,7 +144,6 @@ class SkillsCompanion extends UpdateCompanion<Skill> {
   final Value<bool> isMax;
   const SkillsCompanion({
     this.name = const Value.absent(),
-    this.iconName = const Value.absent(),
     this.currentLevel = const Value.absent(),
     this.currentHours = const Value.absent(),
     this.levelUp = const Value.absent(),
@@ -169,21 +152,18 @@ class SkillsCompanion extends UpdateCompanion<Skill> {
   });
   SkillsCompanion.insert({
     @required String name,
-    @required String iconName,
     @required int currentLevel,
     @required int currentHours,
     @required List<int> levelUp,
     @required bool available,
     this.isMax = const Value.absent(),
   })  : name = Value(name),
-        iconName = Value(iconName),
         currentLevel = Value(currentLevel),
         currentHours = Value(currentHours),
         levelUp = Value(levelUp),
         available = Value(available);
   SkillsCompanion copyWith(
       {Value<String> name,
-      Value<String> iconName,
       Value<int> currentLevel,
       Value<int> currentHours,
       Value<List<int>> levelUp,
@@ -191,7 +171,6 @@ class SkillsCompanion extends UpdateCompanion<Skill> {
       Value<bool> isMax}) {
     return SkillsCompanion(
       name: name ?? this.name,
-      iconName: iconName ?? this.iconName,
       currentLevel: currentLevel ?? this.currentLevel,
       currentHours: currentHours ?? this.currentHours,
       levelUp: levelUp ?? this.levelUp,
@@ -212,18 +191,6 @@ class $SkillsTable extends Skills with TableInfo<$SkillsTable, Skill> {
   GeneratedTextColumn _constructName() {
     return GeneratedTextColumn(
       'name',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _iconNameMeta = const VerificationMeta('iconName');
-  GeneratedTextColumn _iconName;
-  @override
-  GeneratedTextColumn get iconName => _iconName ??= _constructIconName();
-  GeneratedTextColumn _constructIconName() {
-    return GeneratedTextColumn(
-      'icon_name',
       $tableName,
       false,
     );
@@ -292,7 +259,7 @@ class $SkillsTable extends Skills with TableInfo<$SkillsTable, Skill> {
 
   @override
   List<GeneratedColumn> get $columns =>
-      [name, iconName, currentLevel, currentHours, levelUp, available, isMax];
+      [name, currentLevel, currentHours, levelUp, available, isMax];
   @override
   $SkillsTable get asDslTable => this;
   @override
@@ -308,12 +275,6 @@ class $SkillsTable extends Skills with TableInfo<$SkillsTable, Skill> {
           _nameMeta, name.isAcceptableValue(d.name.value, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
-    }
-    if (d.iconName.present) {
-      context.handle(_iconNameMeta,
-          iconName.isAcceptableValue(d.iconName.value, _iconNameMeta));
-    } else if (isInserting) {
-      context.missing(_iconNameMeta);
     }
     if (d.currentLevel.present) {
       context.handle(
@@ -358,9 +319,6 @@ class $SkillsTable extends Skills with TableInfo<$SkillsTable, Skill> {
     final map = <String, Variable>{};
     if (d.name.present) {
       map['name'] = Variable<String, StringType>(d.name.value);
-    }
-    if (d.iconName.present) {
-      map['icon_name'] = Variable<String, StringType>(d.iconName.value);
     }
     if (d.currentLevel.present) {
       map['current_level'] = Variable<int, IntType>(d.currentLevel.value);

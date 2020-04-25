@@ -4,6 +4,7 @@ import 'package:gvp_sim_db/gameData.dart';
 import 'package:gvp_sim_db/homePage.dart';
 import 'package:gvp_sim_db/profilePage.dart';
 import 'package:gvp_sim_db/skill_page.dart';
+import 'package:gvp_sim_db/TutorialPage.dart';
 import 'package:provider/provider.dart';
 import 'database/moor_database.dart';
 import 'theme_stuff/ThemeModel.dart';
@@ -11,7 +12,6 @@ import 'SettingsPage.dart';
 import 'package:flutter/services.dart';
 
 
-//todo: Zprovoznit celý gameloop
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown,DeviceOrientation.portraitUp]);
@@ -31,13 +31,14 @@ void main() {
   Widget build(BuildContext context) {
 
   return MaterialApp(
-  initialRoute: '/',
+  initialRoute: '/HomePage',
   routes: {
-  '/': (context) => HomePage(),
+  '/HomePage': (context) => HomePage(),
   '/Encounter': (context) => Encounter(),
   '/ProfilePage': (context) => ProfilePage(),
   '/SkillPage': (context) => SkillPage(),
-  '/SettingsPage': (context) => SettingsPage(),
+    '/SettingsPage': (context) => SettingsPage(),
+    '/TutorialPage': (context) => TutorialPage(),
   },
   theme: Provider.of<ThemeModel>(context).currentTheme,
   title: 'GVP Simulator',

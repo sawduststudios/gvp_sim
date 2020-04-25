@@ -10,6 +10,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Future<bool> isGameSave = existsGameSave(Provider.of<AppDatabase>(context, listen: false));
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -43,22 +46,67 @@ class HomePage extends StatelessWidget {
             SizedBox(
               height:80,
             ),
-            MaterialButton(
-              minWidth: 180,
-              color: Theme.of(context).primaryColor,
-              child: Text(
-                'CONTINUE',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Theme.of(context).backgroundColor,
-                ),
-              ),
-              onPressed: () {
-                AppDatabase db = Provider.of<AppDatabase>(context, listen: false);
-                GameData gameData = Provider.of<GameData>(context, listen: false);
-                //_gameData.sleep = 30;
-                gameData.loadFromDatabase(db);
-                Navigator.pushNamed(context, gameData.savedPosition['page']);},
+            FutureBuilder(
+              future: isGameSave,
+              builder: (context, snapshot) {
+                if(snapshot.hasData) {
+                  return snapshot.data ? MaterialButton(
+                    minWidth: 180,
+                    color: Theme.of(context).primaryColor,
+                    child: Text(
+                      'CONTINUE',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Theme.of(context).backgroundColor,
+                      ),
+                    ),
+                    onPressed: () {
+                      AppDatabase db = Provider.of<AppDatabase>(context, listen: false);
+                      GameData gameData = Provider.of<GameData>(context, listen: false);
+                      //_gameData.sleep = 30;
+                      gameData.loadFromDatabase(db);
+                      Navigator.pushNamed(context, gameData.savedPosition['page']);},
+                  ) :
+                  MaterialButton(
+                      minWidth: 180,
+                      color: Colors.grey[400],
+                      child: Text(
+                        'CONTINUE',
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.grey[900],
+                        ),
+                      ),
+                      onPressed: () {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          backgroundColor: Colors.grey[900],
+                          content: Text("Nemáš uloženou hru!", style: TextStyle(color: Colors.white),),
+                        ),
+                        );
+                      }
+                  );
+                }
+                else {
+                  return MaterialButton(
+                      minWidth: 180,
+                      color: Colors.grey[400],
+                      child: Text(
+                        'CONTINUE',
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.grey[900],
+                        ),
+                      ),
+                      onPressed: () {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          backgroundColor: Colors.grey[900],
+                          content: Text("Nemáš uloženou hru!", style: TextStyle(color: Colors.white),),
+                        ),
+                        );
+                      }
+                  );
+                }
+              }
             ),
             SizedBox(
               height: 15,
@@ -74,13 +122,14 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               onPressed: () async {
+                //todo: musi vycistit hru jako game over, are you sure?
                 final database = Provider.of<AppDatabase>(context, listen:false);
                 final skillsCount = (await database.getAllSkills()).length;
                 if(skillsCount != DataStorage.SKILLCOUNT) {
                   print('Filling skills');
                   dumpSkills(database);
                 }
-                Navigator.pushNamed(context, '/ProfilePage');
+                Navigator.pushNamed(context, '/Encounter');
                 },
             ),
             SizedBox(
@@ -96,5 +145,9 @@ class HomePage extends StatelessWidget {
     for(Skill i in DataStorage.skills) {
       db.insertSkill(i);
     }
+  }
+
+  Future<bool> existsGameSave(db) async{
+    return (await db.getAllGameData()).length == 1;
   }
 }

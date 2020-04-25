@@ -25,9 +25,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void ProfilePageSubmit() {
     GameData gameData = Provider.of<GameData>(context, listen: false);
-    //pokud nemam sleep, umru
-    if(gameData.sleep <= 0) {
-      print('GAME OVER, usnul jsi');
+
+    final isGameOver = gameData.isGameOver();
+    if(isGameOver[0]) {
+      gameData.gameOver(context, Provider.of<AppDatabase>(context, listen: false), isGameOver[1]);
     }
     else {
       if (gameData.dailyHours > 0) {
@@ -147,6 +148,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   size: 30,
                 ),
                 onPressed: () {
+                  gameData.sleep = 50;
+                  gameData.money = 50;
+                  gameData.happiness = 50;
+                  gameData.teacherPopularity = 20;
+                  gameData.peerPopularity = 20;
+                  gameData.parentPopularity = 20;
                   Scaffold.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.grey[900],
                     content: Text("Na implementaci funkce 'úkolníček' v Sawdust Studios pilně pracujeme...", style: TextStyle(color: Colors.white),),

@@ -99,7 +99,7 @@ class _DialogueState extends State<Dialogue> {
           SizedBox(height: 10,),
           Image.asset(
             widget.firstEvent.imagePath,
-            height: 300,
+            height: 250,
           ),
           Spacer(),
           Padding(
@@ -236,7 +236,7 @@ class ReactionButton extends StatelessWidget {
             else{
               Scaffold.of(context).showSnackBar(SnackBar(
                 backgroundColor: Colors.grey[900],
-                content: Text("Nemas ${source.requirements[0]} na urovni ${source.requirements[1]}", style: TextStyle(color: Colors.white),),
+                content: Text("Nemáš ${source.requirements[0]} na úrovni ${source.requirements[1]}", style: TextStyle(color: Colors.white),),
               ),);
           }}
         },

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gvp_sim_db/gameData.dart';
 import 'package:provider/provider.dart';
@@ -14,16 +15,24 @@ class EncounterEnd extends StatelessWidget {
     void EncounterSubmit() {
       GameData gameData = Provider.of<GameData>(context, listen: false);
 
-      gameData.dailyHours = 5;
-      print(gameData.sleep);
+      final isGameOver = gameData.isGameOver();
+      if(isGameOver[0]) {
+        gameData.gameOver(context, Provider.of<AppDatabase>(context, listen: false), isGameOver[1]);
+      }
+      else {
+        gameData.dailyHours = 5;
+        print(gameData.sleep);
 
-      gameData.currentChanges = {'sleep': 0, 'money': 0, 'happiness': 0,
-        'peerPopularity': 0,'parentPopularity': 0,'teacherPopularity': 0, 'skillsUnlocked': []};
+        gameData.currentChanges = {'sleep': 0, 'money': 0, 'happiness': 0,
+          'peerPopularity': 0,'parentPopularity': 0,'teacherPopularity': 0, 'skillsUnlocked': []};
 
-      gameData.savedPosition['page'] = '/ProfilePage';
+        gameData.savedPosition['page'] = '/ProfilePage';
 
-      gameData.saveToDatabase(Provider.of<AppDatabase>(context, listen: false));
-      Navigator.pushNamedAndRemoveUntil(context, "/ProfilePage", ModalRoute.withName("/"));
+        gameData.saveToDatabase(Provider.of<AppDatabase>(context, listen: false));
+        Navigator.pushNamedAndRemoveUntil(context, "/ProfilePage", ModalRoute.withName("/HomePage"));
+      }
+
+
     }
 
     GameData gameData = Provider.of<GameData>(context, listen: false);
@@ -42,6 +51,7 @@ class EncounterEnd extends StatelessWidget {
                 SizedBox(height: 25,),
                 Text(
                   currentEvent.personName,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 35,
@@ -67,6 +77,7 @@ class EncounterEnd extends StatelessWidget {
                       child: Text(
                         sentence,
                         style: Theme.of(context).textTheme.body1,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),

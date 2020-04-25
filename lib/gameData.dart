@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gvp_sim_db/database/dataStorage.dart';
 import 'database/moor_database.dart';
 import 'package:gvp_sim_db/gameOver.dart';
 
@@ -27,28 +28,26 @@ class GameData with ChangeNotifier {
   int _teacherPopularity = 20;
   List<Skill> _activeSkills = [
     Skill(
-      name: "Seriousness",
-      iconName: "guitar",
+      name: 'Flutter',
       currentHours: 0,
-      currentLevel: 0,
-      levelUp: [3, 5, 7],
+      currentLevel: 3,
+      levelUp: [5,8,10,15,25,80],
       available: true,
     ),
     Skill(
-      name: "Nonjokingness",
-      iconName: "guitar",
+      name: "Fotbal",
       currentHours: 0,
-      currentLevel: 0,
-      levelUp: [6, 10, 13],
+      currentLevel: 3,
+      levelUp: [3,5,8,10,15],
       available: true,
     ),
     Skill(
-        name: 'test skill 3',
-        iconName: 'dummyicon',
-        available: true,
-        currentHours: 0,
-        currentLevel: 0,
-        levelUp: [2, 4]),
+      name: "Kytara",
+      currentHours: 0,
+      currentLevel: 1,
+      levelUp: [2,4,10,18],
+      available: true,
+    ),
   ];
   int _dailyHours = 0;
   List<int> _alreadyLearned = [0, 0, 0];
@@ -211,14 +210,31 @@ class GameData with ChangeNotifier {
     db.updateSkill(_activeSkills[2]);
   }
 
-  bool isGameOver() {
-    return (_sleep <= 0 ||
-        _money <= 0 ||
-        _happiness <= 0 ||
-        (_peerPopularity + _parentPopularity + _teacherPopularity) <= 0);
+  List<dynamic> isGameOver() {
+    if(_sleep <= 0) {
+      return <dynamic>[true, "sleep"];
+    }
+    else if(_money <= 0) {
+      return <dynamic>[true, "money"];
+    }
+    else if(_happiness <= 0) {
+      return <dynamic>[true, "happiness"];
+    }
+    else if(_peerPopularity <= 0) {
+      return <dynamic>[true, "peer"];
+    }
+    else if(_parentPopularity <= 0) {
+      return <dynamic>[true, "parent"];
+    }
+    else if(_teacherPopularity <= 0) {
+      return <dynamic>[true, "teacher"];
+    }
+    else {
+      return <dynamic>[false];
+    }
   }
 
-  void gameOver(BuildContext context, AppDatabase db) {
+  void gameOver(BuildContext context, AppDatabase db, String reason) {
     //Smaze save v databazi
     GameDataSave toDelete = GameDataSave(
       id: 1,
@@ -234,6 +250,10 @@ class GameData with ChangeNotifier {
       savedPosition: savedPosition,
     );
     db.deleteGameData(toDelete);
+
+    for(Skill i in DataStorage.skills) {
+      db.updateSkill(i);
+    }
 
     //vynuluje gamedata v provideru
     currentChanges = {
@@ -257,28 +277,26 @@ class GameData with ChangeNotifier {
     _teacherPopularity = 20;
     _activeSkills = [
       Skill(
-        name: "Seriousness",
-        iconName: "guitar",
+        name: 'Flutter',
         currentHours: 0,
-        currentLevel: 0,
-        levelUp: [3, 5, 7],
+        currentLevel: 3,
+        levelUp: [5,8,10,15,25,80],
         available: true,
       ),
       Skill(
-        name: "Nonjokingness",
-        iconName: "guitar",
+        name: "Fotbal",
         currentHours: 0,
-        currentLevel: 0,
-        levelUp: [6, 10, 13],
+        currentLevel: 3,
+        levelUp: [3,5,8,10,15],
         available: true,
       ),
       Skill(
-          name: 'test skill 3',
-          iconName: 'dummyicon',
-          available: true,
-          currentHours: 0,
-          currentLevel: 0,
-          levelUp: [2, 4]),
+        name: "Kytara",
+        currentHours: 0,
+        currentLevel: 1,
+        levelUp: [2,4,10,18],
+        available: true,
+      ),
     ];
     _dailyHours = 0;
     _alreadyLearned = [0, 0, 0];
@@ -288,7 +306,7 @@ class GameData with ChangeNotifier {
         context,
         MaterialPageRoute(
             builder: (context) => GameOverPage(
-                  reason: 'DefaultReason',
+                  reason: reason,
                 )),
         ModalRoute.withName('/HomePage'));
   }

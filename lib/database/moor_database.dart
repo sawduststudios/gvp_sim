@@ -51,7 +51,6 @@ class MapConvertor extends TypeConverter<Map<String, String>, String> {
 
 class Skills extends Table{
   TextColumn get name => text()();
-  TextColumn get iconName => text()();
   IntColumn get currentLevel => integer()();
   IntColumn get currentHours => integer()();
   TextColumn get levelUp => text().map(const IntListConverter())();

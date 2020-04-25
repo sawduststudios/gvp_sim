@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gvp_sim_db/theme_stuff/ThemeModel.dart';
 import 'package:provider/provider.dart';
-
 import 'gameData.dart';
 
 
@@ -30,6 +28,7 @@ class SettingsPage extends StatelessWidget {
                   color: Theme.of(context).backgroundColor,
                 ),),
               onPressed: () {
+                Navigator.pushNamed(context, '/TutorialPage');
               },
             ),
             SizedBox(height: 15,),
