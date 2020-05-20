@@ -33,10 +33,10 @@ void main() {
   return MaterialApp(
   initialRoute: '/HomePage',
   routes: {
-  '/HomePage': (context) => HomePage(),
-  '/Encounter': (context) => Encounter(),
-  '/ProfilePage': (context) => ProfilePage(),
-  '/SkillPage': (context) => SkillPage(),
+    '/HomePage': (context) => HomePage(),
+    '/Encounter': (context) => Encounter(),
+    '/ProfilePage': (context) => ProfilePage(),
+    '/SkillPage': (context) => SkillPage(),
     '/SettingsPage': (context) => SettingsPage(),
     '/TutorialPage': (context) => TutorialPage(),
   },

@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gvp_sim_db/gameData.dart';
 import 'package:provider/provider.dart';
 import 'database/moor_database.dart';
 
 class EncounterEnd extends StatelessWidget {
-  EncounterEnd({Key key, this.currentEvent, this.sentence}) : super(key: key);
-  final currentEvent;
+  EncounterEnd({Key key, this.currentEventState, this.sentence}) : super(key: key);
+  final currentEventState;
   final sentence;
 
   @override
@@ -50,7 +49,7 @@ class EncounterEnd extends StatelessWidget {
               children: <Widget>[
                 SizedBox(height: 25,),
                 Text(
-                  currentEvent.personName,
+                  currentEventState.personName,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
@@ -62,7 +61,7 @@ class EncounterEnd extends StatelessWidget {
                 SizedBox(height: 10,),
                 Expanded(
                   child: Image.asset(
-                    currentEvent.imagePath,
+                    currentEventState.imagePath,
                   ),
                 ),
                 SizedBox(height: 15,),

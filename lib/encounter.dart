@@ -7,7 +7,6 @@ import 'package:gvp_sim_db/database/moor_database.dart';
 import 'package:gvp_sim_db/gameData.dart';
 import 'database/dataStorage.dart';
 import 'dart:math';
-import 'event.dart';
 import 'eventState.dart';
 import 'package:provider/provider.dart';
 
@@ -17,12 +16,12 @@ class Encounter extends StatefulWidget {
 }
 
 class _State extends State<Encounter> {
-  Event _currentEvent;
+  EventState _currentEventState;
 
   @override
   Widget build(BuildContext context) {
-    _currentEvent =
-        DataStorage.events[new Random().nextInt(DataStorage.EVENTCOUNT)];
+    _currentEventState =
+        DataStorage.eventStates.singleWhere((state) => state.id == (DataStorage.innitStateIDs[0]));  //new Random().nextInt(DataStorage.INNITSTATECOUNT) //DataStorage.innitStateIDs[(new Random().nextInt(DataStorage.innitStateIDs.length))]
 
     return Scaffold(
         appBar: AppBar(title: Text('Dopoledne',
@@ -36,13 +35,13 @@ class _State extends State<Encounter> {
                 onPressed: () {Navigator.pushNamed(context, '/SettingsPage');},
               )]
         ),
-        body: Dialogue(firstEvent: _currentEvent));
+        body: Dialogue(firstEventState: _currentEventState));
   }
 }
 
 class Dialogue extends StatefulWidget {
-  Dialogue({Key key, this.firstEvent}) : super(key: key);
-  Event firstEvent;
+  Dialogue({Key key, this.firstEventState}) : super(key: key);
+  EventState firstEventState;
   @override
   _DialogueState createState() => _DialogueState();
 }
@@ -53,8 +52,7 @@ class _DialogueState extends State<Dialogue> {
   @override
   void initState() {
     super.initState();
-    _currentState = (DataStorage.eventStates
-        .singleWhere((f) => f.id == widget.firstEvent.initStateID));
+    _currentState = widget.firstEventState;
   }
 
   @override
@@ -66,7 +64,7 @@ class _DialogueState extends State<Dialogue> {
             context,
             MaterialPageRoute(
                 builder: (context) => EncounterEnd(
-                      currentEvent: widget.firstEvent,
+                      currentEventState: _currentState,
                       sentence: data.finalSentence,
                     )
             ));
@@ -88,7 +86,7 @@ class _DialogueState extends State<Dialogue> {
         children: <Widget>[
           SizedBox(height: 15,),
           Text(
-            widget.firstEvent.personName,
+            _currentState.personName,
             style: TextStyle(
               color: Colors.black,
               fontSize: 35,
@@ -98,7 +96,7 @@ class _DialogueState extends State<Dialogue> {
           ),
           SizedBox(height: 10,),
           Image.asset(
-            widget.firstEvent.imagePath,
+            _currentState.imagePath,
             height: 250,
           ),
           Spacer(),
