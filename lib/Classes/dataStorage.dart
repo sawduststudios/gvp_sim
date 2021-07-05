@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import "package:gvp_sim_db/database/moor_database.dart";
-import 'package:gvp_sim_db/buttonData.dart';
-import 'package:gvp_sim_db/event.dart';
-import 'package:gvp_sim_db/eventState.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import "package:gvp_sim_db/database/moor_database.dart";
+import 'package:gvp_sim_db/Classes/buttonData.dart';
+import 'package:gvp_sim_db/Classes/eventState.dart';
+
+/// DataStorage uklada nemenny herni obsah:
+/// Skilly, EventStaty, ID Initial EventStatu,
+/// Dictionary mezi jmeny skillu a jejich odpovidajicimi ikonami.
 class DataStorage {
 
   static const SKILLCOUNT = 9;
-  static const EVENTCOUNT = 2;
+  static const INITIALSTATECOUNT = 2;
   static const EVENTSTATECOUNT = 16;
 
   static List<Skill> skills = [
@@ -18,6 +21,7 @@ class DataStorage {
       currentLevel: 1,
       levelUp: [2,4,10,18],
       available: true,
+      isMax: false,
     ),
     Skill(
       name: "Diplomacie",
@@ -25,6 +29,7 @@ class DataStorage {
       currentLevel: 1,
       levelUp: [1,4,5],
       available: true,
+      isMax: false,
     ),
     Skill(
       name: "Balls",
@@ -32,6 +37,7 @@ class DataStorage {
       currentLevel: 0,
       levelUp: [2,1,6,10,14,15,20],
       available: true,
+      isMax: false,
     ),
     Skill(
       name: 'Flutter',
@@ -39,6 +45,7 @@ class DataStorage {
       currentLevel: 3,
       levelUp: [5,8,10,15,25,80],
       available: true,
+      isMax: false,
     ),
     Skill(
       name: "Fotbal",
@@ -46,6 +53,7 @@ class DataStorage {
       currentLevel: 3,
       levelUp: [3,5,8,10,15],
       available: true,
+      isMax: false,
     ),
     Skill(
       name: "Šplhoun",
@@ -53,6 +61,7 @@ class DataStorage {
       currentLevel: 0,
       levelUp: [6,8,10,12,15],
       available: false,
+      isMax: false,
     ),
     Skill(
       name: 'Pythágorovka',
@@ -60,6 +69,7 @@ class DataStorage {
       currentLevel: 0,
       levelUp: [10,15,18,20],
       available: false,
+      isMax: false,
     ),
     Skill(
       name: "Parkur",
@@ -67,6 +77,7 @@ class DataStorage {
       currentLevel: 0,
       levelUp: [6,8,10],
       available: false,
+      isMax: false,
     ),
     Skill(
       name: "Kamenná játra",
@@ -74,6 +85,7 @@ class DataStorage {
       currentLevel: 0,
       levelUp: [3,8,10],
       available: false,
+      isMax: false,
     ),
 
   ];
@@ -90,14 +102,13 @@ class DataStorage {
     "Kamenná játra": MdiIcons.beer,
   };
 
-//todo: tvuj program dela initStateID s malym 'd'
-  static List<Event> events = [
-    Event(id: 100, personName: "Vondy", imagePath: "images/vondy.jpg", initStateID: 10010),
-    Event(id: 101, personName: "Ohýnek", imagePath: "images/ohynek.jpg", initStateID: 10110),
+  static List<int> initialStateIDs = [
+    10010, 10110
   ];
 
   static List<EventState> eventStates = [
     EventState(id: 10010, sentence: "Je začátek školního roku a hodně učitelů odjelo na seznamovací kurzy. Stalo se tak, že před laborkama z chemie je v rozvrhu čtyřhodinová díra. Tvoji spolužáci tě vyslali poprosit Vondy, aby hodina odpadla. Stojíš před kabinetem a klepeš na dveře.\n\"Dále!\"",
+        personName: "Vondy", imagePath: "images/vondy.jpg",
         butt1: ButtonData(text: "...", nextID: 10011,
             isFinal: false, finalSentence: "",
             unlocksSkill: "none"),
@@ -111,6 +122,7 @@ class DataStorage {
             isFinal: false, finalSentence: "",
             unlocksSkill: "none")),
     EventState(id: 10013, sentence: "\"No to to teda moc neumíš. Buď rád(a), že nedostaneš pětku s váhou 10. Opakování očividně potřebujete jako sůl. Hodina bude!\"",
+        personName: "Vondy", imagePath: "images/vondy.jpg",
         butt1: ButtonData(text: "Ach jo...", nextID: 10010,
             isFinal: true, finalSentence: "Tak to se ti teda nepovedlo... Alespoň můžete jít na fotbal.",
             unlocksSkill: "none",
@@ -127,6 +139,7 @@ class DataStorage {
             unlocksSkill: "none",
             effects: {"happiness": -15, "peerPopularity": -15, "teacherPopularity": -1 })),
     EventState(id: 10015, sentence: "A nemohl bych vás nějak přesvědčit?",
+        personName: "Vondy", imagePath: "images/vondy.jpg",
         butt1: ButtonData(text: "Vydírat", nextID: 10010,
             isFinal: true, finalSentence: "aaa",
             unlocksSkill: "none"),
@@ -141,6 +154,7 @@ class DataStorage {
             isFinal: true, finalSentence: "aaa",
             unlocksSkill: "none")),
     EventState(id: 10011, sentence: "\"Dobrý den, paní profesorko. Nemohly by nám dnes odpadnout laborky? Máme přeci stejně jen něco opakovat a my bychom tu museli čtyři hodiny čekat...\"\n\"No dobře, jestli máme jen opakovat, tak si tě teda vyzkouším. Co je C6H12O6?\", ptá se Vondy trochu podrážděně, ale usmívá se.",
+        personName: "Vondy", imagePath: "images/ohynek.jpg",
         butt1: ButtonData(text: "Fruktóza", nextID: 10013,
             isFinal: false, finalSentence: "",
             unlocksSkill: "none"),
@@ -154,6 +168,7 @@ class DataStorage {
             isFinal: false, finalSentence: "",
             unlocksSkill: "none")),
     EventState(id: 10012, sentence: "\"No dobře, a jaká je elektronová konfigurace vanadu?\"",
+        personName: "Vondy", imagePath: "images/vondy.jpg",
         butt1: ButtonData(text: "[Ar] 3d3 4s2", nextID: 10010,
             isFinal: true, finalSentence: "Panečku, fakt to umíš! No možná bychom to jednou mohli vynechat...",
             unlocksSkill: "none",
@@ -168,6 +183,7 @@ class DataStorage {
             isFinal: false, finalSentence: "",
             unlocksSkill: "none")),
     EventState(id: 10110, sentence: "Tábor stojí a oheň plápolá. Hvězdy svítí a je teplo. ideální večer na... Na co vlastně?",
+        personName: "Ohýnek", imagePath: "images/ohynek.jpg",
         butt1: ButtonData(text: "Jít spát", nextID: 10110,
             isFinal: true, finalSentence: "Ráno jsi se probudil sice odpočatý, ale s pomalovaným obličejem a spacákem plným mouky. Všichni se ti bez ostychu smějí.",
             unlocksSkill: "none",
@@ -183,6 +199,7 @@ class DataStorage {
             isFinal: true, finalSentence: "větev není napsaná",
             unlocksSkill: "none")),
     EventState(id: 10112, sentence: "Postupně všichni odchází spát, až už ti dělá společnost jenom Vašek.\n\"Tak co dáme?\"",
+        personName: "Ohýnek", imagePath: "images/ohynek.jpg",
         butt1: ButtonData(text: "Jäger", nextID: 10113,
             isFinal: false, finalSentence: "",
             unlocksSkill: "none",
@@ -200,6 +217,7 @@ class DataStorage {
             unlocksSkill: "none",
             effects: {"sleep": -3})),
     EventState(id: 10113, sentence: "To by chtělo něčím zapít... Jaký dáme pivo?",
+        personName: "Ohýnek", imagePath: "images/ohynek.jpg",
         butt1: ButtonData(text: "Plzeň", nextID: 10114,
             isFinal: false, finalSentence: "",
             unlocksSkill: "none",
@@ -217,6 +235,7 @@ class DataStorage {
             unlocksSkill: "none",
             effects: {"sleep": -3})),
     EventState(id: 10114, sentence: "A na dobrou noc?",
+        personName: "Ohýnek", imagePath: "images/ohynek.jpg",
         butt1: ButtonData(text: "Už raději ne", nextID: 10110,
             isFinal: true, finalSentence: "Ještě celkem střízlivý zalézáš do spacáku. I tak ses ale trochu chlastat naučil.",
             unlocksSkill: "none"),
@@ -233,6 +252,7 @@ class DataStorage {
             unlocksSkill: "none",
             effects: {"happiness": 10})),
     EventState(id: 10111, sentence: "Vytáhl jsi kytaru. Holky čekají, že zahraješ nějakou slaďárnu. Kámoši se těší na nějaký meme a učitelé doufají, že to nebude sprosté. Co zahraješ?",
+        personName: "Ohýnek", imagePath: "images/ohynek.jpg",
         butt1: ButtonData(text: "Buráky", nextID: 10110,
             isFinal: true, finalSentence: "tato větev není napsaná",
             unlocksSkill: "none", requirements: ["Kytara", 1]),
@@ -248,6 +268,7 @@ class DataStorage {
             unlocksSkill: "none", requirements: ["Kytara", 4],
             effects: {"money": -20, "happiness": 20, "peerPopularity": -10, "parentPopularity": -10, "teacherPopularity": -10})),
     EventState(id: 10115, sentence: "Na klín si ti sedne Ema. \n\"To jsi zahrál nádherně,\" zašeptá ti do ucha.\nJe to nejhezčí holka ze třídy a do teď se na tebe za ty roky podívala sotva dvakrát. Zvláštní...",
+        personName: "Ohýnek", imagePath: "images/ohynek.jpg",
         butt1: ButtonData(text: "Chceš to taky naučit?", nextID: 10116,
             isFinal: false, finalSentence: "",
             unlocksSkill: "none"),
@@ -261,6 +282,7 @@ class DataStorage {
             isFinal: false, finalSentence: "",
             unlocksSkill: "none")),
     EventState(id: 10116, sentence: "Ty jsi roztomilej.  Co kdybys na mě počkal dole u kánojí? Něco ti ukážu.",
+        personName: "Ohýnek", imagePath: "images/ohynek.jpg",
         butt1: ButtonData(text: ";)", nextID: 10117,
             isFinal: false, finalSentence: "",
             unlocksSkill: "none"),
@@ -275,6 +297,7 @@ class DataStorage {
             unlocksSkill: "none",
             effects: {"sleep": 10, "happiness": -5})),
     EventState(id: 10117, sentence: "Nenápadně jsi se vytratil od ostatních a posadil se u kánoje Tsunami. ",
+        personName: "Ohýnek", imagePath: "images/ohynek.jpg",
         butt1: ButtonData(text: "Čekat", nextID: 10118,
             isFinal: false, finalSentence: "",
             unlocksSkill: "none",
@@ -290,6 +313,7 @@ class DataStorage {
             isFinal: false, finalSentence: "",
             unlocksSkill: "none")),
     EventState(id: 10118, sentence: "Sedíš tu už skoro půl hodiny a Eva nikde. Citíš se jako pornohvězda na premiéře. ",
+        personName: "Ohýnek", imagePath: "images/ohynek.jpg",
         butt1: ButtonData(text: "Čekat", nextID: 10119,
             isFinal: false, finalSentence: "",
             unlocksSkill: "none",
@@ -305,6 +329,7 @@ class DataStorage {
             isFinal: false, finalSentence: "",
             unlocksSkill: "none")),
     EventState(id: 10119, sentence: "Další půl hodina minula a tobě se klíží oči. Stojí to vůbec za to?",
+        personName: "Ohýnek", imagePath: "images/ohynek.jpg",
         butt1: ButtonData(text: "ANO!", nextID: 10120,
             isFinal: false, finalSentence: "",
             unlocksSkill: "none",
@@ -320,6 +345,7 @@ class DataStorage {
             isFinal: false, finalSentence: "",
             unlocksSkill: "none")),
     EventState(id: 10120, sentence: "Je ti jasné, že už dlouho nevydržíš. Ale věříš, že tě Eva příjemně probudí. Usínáš na kánoji Tsunami?",
+        personName: "Ohýnek", imagePath: "images/ohynek.jpg",
         butt1: ButtonData(text: "Ano Evo!", nextID: 10110,
             isFinal: true, finalSentence: "Pomalu přecházíš do světa snů. Myslíš při tom na Eviny přednosti.",
             unlocksSkill: "none",

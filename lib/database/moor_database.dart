@@ -1,11 +1,13 @@
 import 'package:moor/moor.dart';
 import 'package:moor_flutter/moor_flutter.dart';
-import '../buttonData.dart';
 
 part 'moor_database.g.dart';
 
 //===TABULKY===
 
+/// GameDataSave je pomocna trida pro ukladani GameDat do databaze.
+/// Ma ID, hodnoty statistik, 3 jmena aktivnich skillu, fazi ve ktere se hra nachazi.
+/// Vzdy je ulozeno jen jedno s ID 1 (lze casem zmenit)
 class GameDataSaves extends Table{
   IntColumn get id => integer()();
   IntColumn get sleep => integer()();
@@ -23,6 +25,10 @@ class GameDataSaves extends Table{
   Set<Column> get primaryKey => {id};
 }
 
+/// Convertor mezi dictionary string:string a stringem pro databazi.
+/// Kvuli savedPosition v GameDataSaves.
+/// Pary mezi sebou oddeli carkami, hodnoty v ramci paru mezerou.
+/// V obsahu dictionary nesmi byt mezery.
 class MapConvertor extends TypeConverter<Map<String, String>, String> {
   const MapConvertor();
 
@@ -49,6 +55,10 @@ class MapConvertor extends TypeConverter<Map<String, String>, String> {
   }
 }
 
+/// Skill uklada herni schopnosti.
+/// Ma unikatni jmeno, soucasny level, pocet prave natrenovanych hodin,
+/// list poctu hodin potrebnych k postupnemu levelovani,
+/// bool jestli je odemceny, bool jestli je na maximalnim levelu.
 class Skills extends Table{
   TextColumn get name => text()();
   IntColumn get currentLevel => integer()();
@@ -61,7 +71,9 @@ class Skills extends Table{
   Set<Column> get primaryKey => {name};
 }
 
-//Convertor pro Skills
+/// Convertor mezi listem integeru a stringem pro databazi.
+/// Kvuli listu levelUp v Skills.
+/// Hodnoty v listu oddeluje carkami.
 class IntListConverter extends TypeConverter<List<int>, String> {
   const IntListConverter();
 
@@ -82,21 +94,21 @@ class IntListConverter extends TypeConverter<List<int>, String> {
   }
 }
 
+
 //===DATABAZE===
-@UseMoor(tables: [Skills, GameDataSaves])//, daos: [SkillDao, EventDao, EventStateDao])
+@UseMoor(tables: [Skills, GameDataSaves])
 class AppDatabase extends _$AppDatabase {
   AppDatabase()
-  // Specify the location of the database file
       : super((FlutterQueryExecutor.inDatabaseFolder(
     path: 'db.sqlite',
     // Good for debugging - prints SQL in the console
     //logStatements: true,
   )));
-
-  // Bump this when changing tables and columns.
-  // Migrations will be covered in the next part.
+  //TODO: migrace databaze
   @override
   int get schemaVersion => 1;
+
+//===QUERIES===
 
   //Queries pro GameDataSave
   Future insertGameData (GameDataSave gamedata) => into(gameDataSaves).insert(gamedata);
@@ -120,28 +132,3 @@ class AppDatabase extends _$AppDatabase {
     ]))
     .watch();
 }
-
-//DAOs co nepouzivame
-
-//@UseDao(tables: [Skills])
-//class SkillDao extends DatabaseAccessor<AppDatabase> with _$SkillDaoMixin {
-//  final AppDatabase db;
-//
-//  // Called by the AppDatabase class
-//  SkillDao(this.db) : super(db);
-//}
-//
-//@UseDao(tables: [Events])
-//class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
-//  final AppDatabase db;
-//
-//  // Called by the AppDatabase class
-//  EventDao(this.db) : super(db);
-//}
-//
-//@UseDao(tables: [EventStates])
-//class EventStateDao extends DatabaseAccessor<AppDatabase> with _$EventStatesDaoMixin {
-//  final AppDatabase db;
-//
-//  EventStateDao(this.db) : super(db);
-//}

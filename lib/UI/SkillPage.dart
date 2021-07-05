@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:gvp_sim_db/SkillChanger.dart';
 import 'package:provider/provider.dart';
-import 'database/moor_database.dart';
 import 'package:moor/moor.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'gameData.dart';
-import 'database/dataStorage.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import 'package:gvp_sim_db/database/moor_database.dart';
+import 'package:gvp_sim_db/Classes/gameData.dart';
+import 'package:gvp_sim_db/Classes/dataStorage.dart';
+
+import 'package:gvp_sim_db/UI/SkillChangePage.dart';
+
+/// Zobrazuje Skilly z databaze v ListView, ty available barevne, unavailable sede,
+/// oznaci zelene ty aktivni. Umoznuji jit slidem na detail skillu a dat ho do slotu.
 class SkillPage extends StatefulWidget {
   @override
   _SkillPageState createState() => _SkillPageState();
@@ -16,6 +19,7 @@ class SkillPage extends StatefulWidget {
 class _SkillPageState extends State<SkillPage> {
   @override
   Widget build(BuildContext context) {
+
     final db = Provider.of<AppDatabase>(context);
 
     return Scaffold(
@@ -48,11 +52,9 @@ class _SkillPageState extends State<SkillPage> {
   }
 }
 
+/// Tile pro zobrazeni jednoho skillu v ListView.
 class SkillTile extends StatelessWidget {
-  SkillTile({
-    Key key,
-    @required this.shownSkill,
-  }) : super(key: key);
+  SkillTile({Key key, @required this.shownSkill,}) : super(key: key);
 
   final Skill shownSkill;
 
@@ -60,6 +62,11 @@ class SkillTile extends StatelessWidget {
   Widget build(BuildContext context) {
 
     GameData gameData = Provider.of<GameData>(context, listen: false);
+
+    bool isSkillActive(Skill testedSkill, GameData gameData) {
+      return new List<String>.generate(3, (i) => gameData.activeSkills[i].name)
+          .contains(testedSkill.name);
+    }
 
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
@@ -74,12 +81,12 @@ class SkillTile extends StatelessWidget {
       secondaryActions: <Widget>[
         IconSlideAction(
           caption: 'Add',
-          color: (new List<String>.generate(3, (i) => gameData.activeSkills[i].name)
-              .contains(shownSkill.name) | (shownSkill.available == false)) ? Colors.grey : Theme.of(context).primaryColor,
+          //Pokud Skill neni aktivni a je available, Slidable na SkillChanger je barevna, jinak je seda
+          color: (!isSkillActive(shownSkill, gameData) && (shownSkill.available)) ? Theme.of(context).primaryColor : Colors.grey,
           icon: Icons.add,
           onTap: () {
-            if(!new List<String>.generate(3, (i) => gameData.activeSkills[i].name)
-                .contains(shownSkill.name) & (shownSkill.available))
+            //Pokud Skill neni aktivni a je available, posle s nim hrace na skillChanger
+            if(!isSkillActive(shownSkill, gameData) && (shownSkill.available))
             {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) => SkillChanger(newSkill: shownSkill),
@@ -90,17 +97,24 @@ class SkillTile extends StatelessWidget {
         )
       ],
       child: Card(
+        //Pokud je Skill available, Tile je barevny, jinak je sedy
         color: shownSkill.available ? Theme.of(context).accentColor : Colors.grey,
         child: ListTile(
             leading: Icon(
-              (DataStorage.skillIcons.keys.contains(shownSkill.name)) ? DataStorage.skillIcons[shownSkill.name] : Icons.money_off,
+              //Ikonu bere podle listu v DataStorage
+              (DataStorage.skillIcons.keys.contains(shownSkill.name)) ? DataStorage.skillIcons[shownSkill.name] : Icons.error,
               size: 60,
               color: (shownSkill.available) ? ((gameData.isGvpTheme) ? Colors.blue[900] : Colors.orange[900]) : Colors.grey[800],
             ), //FlutterLogo(size: 72.0),
             onTap: () {},
             title: Text("${shownSkill.name}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),
-            subtitle: Text(
-                """Current level: ${shownSkill.currentLevel.toString()}\nHours to next level: ${shownSkill.levelUp[shownSkill.currentLevel].toString()}""", style: TextStyle(fontSize: 15)),
+            subtitle: (shownSkill.isMax) ?
+              Text("""Current level: ${shownSkill.currentLevel.toString()}
+                  \nThis is the max level!""",
+                  style: TextStyle(fontSize: 15)) :
+              Text("""Current level: ${shownSkill.currentLevel.toString()}
+                  \nHours to next level: ${shownSkill.levelUp[shownSkill.currentLevel].toString()}""",
+                  style: TextStyle(fontSize: 15)),
             isThreeLine: true,
             trailing: (new List<String>.generate(3, (i) => gameData.activeSkills[i].name)
                 .contains(shownSkill.name))

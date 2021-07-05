@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
+/// TAHLE VERZE SKILLU SE NIJAK NEPOUZIVA!
 class Skill {
   String name;
   Icon icon;

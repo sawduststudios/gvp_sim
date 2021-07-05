@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gvp_sim_db/database/moor_database.dart';
-import 'package:gvp_sim_db/gameData.dart';
 import 'package:provider/provider.dart';
 
+import 'package:gvp_sim_db/database/moor_database.dart';
+import 'package:gvp_sim_db/Classes/gameData.dart';
+
+///Stranka pro vyber slotu, kam hrac da novy skill
 class SkillChanger extends StatelessWidget {
   SkillChanger({Key key, this.newSkill}) : super(key : key);
   final Skill newSkill;
@@ -51,8 +53,10 @@ class SkillChanger extends StatelessWidget {
   }
 }
 
+/// Tile zobrazujici aktivni skill na indexu aciveSlot, ktery muze byt nahrazen novym.
 class SlotPreviewButton extends StatelessWidget {
   SlotPreviewButton({Key key, this.activeSlot, this.newSkill}): super(key: key);
+
   final int activeSlot;
   final Skill newSkill;
 
@@ -76,12 +80,17 @@ class SlotPreviewButton extends StatelessWidget {
                 child: Text("Slot ${activeSlot + 1}",
                     style: TextStyle(fontSize: 22, color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold)),
                 onPressed: () {
+                  //log
                   print("novy skill je ${newSkill.name}, vybran slot $activeSlot");
+                  //vrati a vynuluje hodiny dnes investovane do nahrazeneho skillu
                   gameData.dailyHours += gameData.activeSkills[activeSlot].currentHours - gameData.alreadyLearned[activeSlot];
                   gameData.alreadyLearned[activeSlot] = 0;
+                  //vynuluje v databazi soucasny postup nahrazeneho skillu
                   db.updateSkill(gameData.activeSkills[activeSlot].copyWith(currentHours: 0));
+                  //da novy skill do gameDat a ulozi je do tak databaze
                   gameData.activeSkills[activeSlot] = newSkill;
                   gameData.saveToDatabase(db);
+                  //navrat na profilePage
                   Navigator.popUntil(context, ModalRoute.withName("/ProfilePage"));
                 },
               ),

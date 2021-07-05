@@ -1,3 +1,8 @@
+/// ButtonData ukladaji informace o tlacitku v encounteru:
+/// Text, ID eventStatu, kam hrace posle, jestli encounter ukonci,
+/// zmeny statistik, final sentence pokud ukoncuje, jaky skill odemyka,
+/// jaky skill vyzaduje.
+/// ButtonData jsou parametr v eventState.
 class ButtonData{
   String text;
   int nextID;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Ukaze se, kdyz hrac prohraje. Bere si string duvod, proc se to stalo,
+/// zobrazi o tom story a buttonem umozni navrat na HomePage.
 class GameOverPage extends StatelessWidget {
   GameOverPage({Key key, this.reason}):super(key:key);
 
@@ -11,7 +13,7 @@ class GameOverPage extends StatelessWidget {
       case('sleep'):
         return "Byl jsi tak unavený, že tě nevzbudilo ani rachtání kánoe sklouzávající do řeky "
             "ani šplouchání vln okolo. Když jsi se ráno vzbudil, byl jsi už v Rumusku. "
-            "S trochou štěstí tě místní kmen přijme za svého a nechá pást ovce.";
+            "S trochou štěstí tě místní kmen přijme za svého a nechá tě pást ovce.";
 //        return "Potom, co si se už týden pořádně nevyspal, jsi zkolaboval u automatu ve třetím patře. "
 //            "Spadl jsi na něj, až se na tebe vysypaly horalky. "
 //            "Projevila se tvá skrytá alergie na buráky a ani "

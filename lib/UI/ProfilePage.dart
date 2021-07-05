@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gvp_sim_db/database/moor_database.dart';
-import 'package:gvp_sim_db/gameData.dart';
 import 'package:provider/provider.dart';
 import 'package:swipedetector/swipedetector.dart';
-import 'database/dataStorage.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import 'package:gvp_sim_db/database/moor_database.dart';
+import 'package:gvp_sim_db/Classes/gameData.dart';
+import 'package:gvp_sim_db/Classes/dataStorage.dart';
+
+///Stranka, kde hrac vidi sve statistiky a odpoledne trenuje skilly.
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -13,46 +14,76 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
 
-  void lvlUpSkill(int index) {
+  ///Zkontroluje skilly ve slotech a zvysi jim level pokud ho dosahly a nejsou na maxu
+  void levelUpSkills()
+  {
+    print("levelUp?");
     GameData gameData = Provider.of<GameData>(context, listen: false);
-    if ((gameData.activeSkills[index].currentHours == gameData.activeSkills[index].levelUp[gameData.activeSkills[index].currentLevel]) & (gameData.activeSkills[index].currentLevel < gameData.activeSkills[index].levelUp.length -1)){
-      gameData.activeSkills[index] = gameData.activeSkills[index].copyWith(currentLevel: gameData.activeSkills[index].currentLevel + 1, currentHours: 0);
-      gameData.alreadyLearned[index] = 0;
-      print('lvlup skillu ${gameData.activeSkills[index].name}');
+    for(int index = 0; index < 3; index++)
+    {
+      //Pokud skill neni na max levelu a ma dost hodin
+      if ((!gameData.activeSkills[index].isMax) &&
+          (gameData.activeSkills[index].currentHours == gameData.activeSkills[index].levelUp[gameData.activeSkills[index].currentLevel]))
+      {
+        print("prvni if");
+        //Zvysi level a vymaze soucasny pocet hodin u skillu i u gameDat
+        gameData.activeSkills[index] = gameData.activeSkills[index].copyWith(currentLevel: gameData.activeSkills[index].currentLevel + 1, currentHours: 0, isMax: false);
+        gameData.alreadyLearned[index] = 0;
+        //Pokud je na maxu, nastvi mu isMax = true
+        if(gameData.activeSkills[index].currentLevel == gameData.activeSkills[index].levelUp.length) {
+          gameData.activeSkills[index] = gameData.activeSkills[index].copyWith(isMax: true);
+        }
+        print("druhy if");
+        //log
+        print('lvlup skillu ${gameData.activeSkills[index].name}');
+      }
+      else{print('no lvlup ${index}');}
     }
-    else{print('no lvlup ${index}');}
+    print("Levelup!");
   }
 
-  void ProfilePageSubmit() {
+  ///Handluje prechod do dalsiho dne hry
+  void profilePageSubmit() {
     GameData gameData = Provider.of<GameData>(context, listen: false);
 
+    //Zkontroluje, jestli neni GameOver, pripadne ho zavola
     final isGameOver = gameData.isGameOver();
+
     if(isGameOver[0]) {
       gameData.gameOver(context, Provider.of<AppDatabase>(context, listen: false), isGameOver[1]);
     }
-    else {
-      if (gameData.dailyHours > 0) {
+    else
+    {
+      //Pokud zbyvaji DailyHours, pricte je ke spanku
+      if (gameData.dailyHours > 0)
+      {
         gameData.sleep += gameData.dailyHours * 10;
       }
 
+      //updatuje alreadyLearned
       gameData.alreadyLearned[0] = gameData.activeSkills[0].currentHours;
       gameData.alreadyLearned[1] = gameData.activeSkills[1].currentHours;
       gameData.alreadyLearned[2] = gameData.activeSkills[2].currentHours;
 
-      lvlUpSkill(0);
-      lvlUpSkill(1);
-      lvlUpSkill(2);
+      //LevelUpne skilly co to potrebuji
+      levelUpSkills();
 
+      //Updatuje ulozenou fazi hry
       gameData.savedPosition['page'] = '/Encounter';
 
+      //Ulozi gameData do databaze
       gameData.saveToDatabase(Provider.of<AppDatabase>(context, listen: false));
+
+      //Pokracuje na Encounter
       Navigator.pushReplacementNamed(context, "/Encounter");
     }
   }
 
   @override
   Widget build(BuildContext context) {
+
     GameData gameData = Provider.of<GameData>(context, listen: true);
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -128,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
-          ProfilePageSubmit();
+          profilePageSubmit();
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -148,6 +179,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   size: 30,
                 ),
                 onPressed: () {
+                  //Resetuje Statistiky na default a ukaze snackBar ze ukolnicej jeste neni
+                  //TODO: tohle je vyvojova vec, musime to dat pryc
                   gameData.sleep = 50;
                   gameData.money = 50;
                   gameData.happiness = 50;
@@ -179,8 +212,12 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
+///Widget ukazujici hodnotu statistiky mezi 0 a 100.
+///Bere si barvu, jakou ma mit a string o tom, jakou statistiku ukazuje.
+///'sleep'/'money'/'happiness'
 class StatBar extends StatefulWidget {
   StatBar({Key key, this.barColor, this.shownStat}) : super(key: key);
+
   final Color barColor;
   final String shownStat;
 
@@ -192,30 +229,49 @@ class _StatBarState extends State<StatBar> {
 
   @override
   Widget build(BuildContext context) {
+
     Color barColor = widget.barColor;
-    final data = Provider.of<GameData>(context, listen: true);
+    final gameData = Provider.of<GameData>(context, listen: true);
     int barFlex;
+
     switch (widget.shownStat) {
       case ('sleep'):
-        if(data.sleep <= 0) {
+        if(gameData.sleep <= 0) {
           barFlex = 2;
           barColor = Colors.red;
         }
-        else if(data.sleep > 100) {
+        else if(gameData.sleep > 100) {
           barFlex = 100;
         }
         else {
-          barFlex = data.sleep;
+          barFlex = gameData.sleep;
         }
         break;
       case ('money'):
-        barFlex = data.money;
-        break;
-      case ('happiness'):
-        barFlex = data.happiness;
-        break;
+        if(gameData.money <= 0) {
+          barFlex = 2;
+          barColor = Colors.red;
+        }
+        else if(gameData.money > 100) {
+          barFlex = 100;
+        }
+        else {
+          barFlex = gameData.money;
+        }
+        break;case ('happiness'):
+      if(gameData.happiness <= 0) {
+        barFlex = 2;
+        barColor = Colors.red;
+      }
+      else if(gameData.happiness > 100) {
+        barFlex = 100;
+      }
+      else {
+        barFlex = gameData.happiness;
+      }
+      break;
       default:
-        barFlex = data.sleep;
+        barFlex = 50;
         print('Posral jsi to, Statbar ma spatnej argument');
     }
 
@@ -239,6 +295,8 @@ class _StatBarState extends State<StatBar> {
   }
 }
 
+///Statbar specialne na kombinaci tri popularit.
+///Bere si tri barvy, ktere ma ukazovat.
 class TripleStatBar extends StatefulWidget {
   TripleStatBar({
     Key key,
@@ -246,6 +304,7 @@ class TripleStatBar extends StatefulWidget {
     this.barColor2,
     this.barColor3,
   }) : super(key: key);
+
   final Color barColor1;
   final Color barColor2;
   final Color barColor3;
@@ -255,12 +314,15 @@ class TripleStatBar extends StatefulWidget {
 }
 
 class _TripleStatBarState extends State<TripleStatBar> {
+
   @override
   Widget build(BuildContext context) {
-    final data = Provider.of<GameData>(context);
-    int barFlex1 = data.peerPopularity;
-    int barFlex2 = data.parentPopularity;
-    int barFlex3 = data.teacherPopularity;
+
+    final gameData = Provider.of<GameData>(context);
+    int barFlex1 = gameData.peerPopularity;
+    int barFlex2 = gameData.parentPopularity;
+    int barFlex3 = gameData.teacherPopularity;
+
     return AspectRatio(
       aspectRatio: 1 / 5,
       child: Container(
@@ -286,9 +348,14 @@ class _TripleStatBarState extends State<TripleStatBar> {
   }
 }
 
+///Widget zobrazujici aktivni skill, swipem mu pridava a ubira hodiny.
+///Bere si index 0-2 activeSkillSlotu, ktery zobrazuje.
+///TODO: prave s ukoly, maxLevelem a kickovanim skillu, moznost byt prazdny, okomentovat to uvnitr because je to mess
 class SkillBox extends StatefulWidget {
   SkillBox({Key key, this.activeSkillSlot}) : super(key: key);
+
   final activeSkillSlot;
+
   @override
   _SkillBoxState createState() => _SkillBoxState();
 }
@@ -378,7 +445,9 @@ class _SkillBoxState extends State<SkillBox> {
                       top: 10.0, right: 10.0, bottom: 5.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
+                    children: (activeSkill.isMax) ?
+                    <Widget>[Text("Max"),] :
+                    <Widget>[
                       Text('${activeSkill.currentHours}'),
                       Text('/'),
                       Text('${activeSkill.levelUp[activeSkill.currentLevel]}'),

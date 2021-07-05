@@ -3,6 +3,7 @@ import 'theme.dart';
 
 enum ThemeType { Light, Dark }
 
+///Handler zmeny mezi themes
 class ThemeModel extends ChangeNotifier {
   ThemeData currentTheme = gvpTheme;
   ThemeType _themeType = ThemeType.Dark;

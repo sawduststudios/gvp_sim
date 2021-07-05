@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:flutter/services.dart';
 
-
+/// Zobrazuje videotutorial z youtube
 class TutorialPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

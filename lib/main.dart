@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:gvp_sim_db/encounter.dart';
-import 'package:gvp_sim_db/gameData.dart';
-import 'package:gvp_sim_db/homePage.dart';
-import 'package:gvp_sim_db/profilePage.dart';
-import 'package:gvp_sim_db/skill_page.dart';
-import 'package:gvp_sim_db/TutorialPage.dart';
 import 'package:provider/provider.dart';
-import 'database/moor_database.dart';
-import 'theme_stuff/ThemeModel.dart';
-import 'SettingsPage.dart';
 import 'package:flutter/services.dart';
 
+import 'package:gvp_sim_db/themeStuff/ThemeModel.dart';
+import 'package:gvp_sim_db/database/moor_database.dart';
+import 'package:gvp_sim_db/Classes/gameData.dart';
+
+import 'package:gvp_sim_db/UI/EncounterPage.dart';
+import 'package:gvp_sim_db/UI/HomePage.dart';
+import 'package:gvp_sim_db/UI/ProfilePage.dart';
+import 'package:gvp_sim_db/UI/SkillPage.dart';
+import 'package:gvp_sim_db/UI/TutorialPage.dart';
+import 'package:gvp_sim_db/UI/SettingsPage.dart';
 
 void main() {
+  //Orientace jen na vysku
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown,DeviceOrientation.portraitUp]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+
+  //Inicializace Provideru na AppDatabase, GameData a Theme
   runApp(
       MultiProvider(
           providers: [
@@ -25,23 +30,21 @@ void main() {
           child: MyApp()));
 }
 
-  class MyApp extends StatelessWidget {
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
-  return MaterialApp(
-  initialRoute: '/HomePage',
-  routes: {
-  '/HomePage': (context) => HomePage(),
-  '/Encounter': (context) => Encounter(),
-  '/ProfilePage': (context) => ProfilePage(),
-  '/SkillPage': (context) => SkillPage(),
-    '/SettingsPage': (context) => SettingsPage(),
-    '/TutorialPage': (context) => TutorialPage(),
-  },
-  theme: Provider.of<ThemeModel>(context).currentTheme,
-  title: 'GVP Simulator',
-  );
+    return MaterialApp(
+      initialRoute: '/HomePage',
+      routes: {
+        '/HomePage': (context) => HomePage(),
+        '/Encounter': (context) => Encounter(),
+        '/ProfilePage': (context) => ProfilePage(),
+        '/SkillPage': (context) => SkillPage(),
+        '/SettingsPage': (context) => SettingsPage(),
+        '/TutorialPage': (context) => TutorialPage(),
+      },
+      theme: Provider.of<ThemeModel>(context).currentTheme,
+      title: 'GVP Simulator',
+    );
   }
-  }
+}

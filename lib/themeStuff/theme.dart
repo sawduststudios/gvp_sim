@@ -1,7 +1,6 @@
-
-
 import 'package:flutter/material.dart';
 
+///Modry theme s cernym pismem
 ThemeData gvpTheme = ThemeData.dark().copyWith(
     primaryColor: Colors.blue[800],
     accentColor: Colors.blue[600],
@@ -15,6 +14,7 @@ ThemeData gvpTheme = ThemeData.dark().copyWith(
       color: Colors.blue[800],
     ));
 
+///Oranzovy theme s bilym pismem
 ThemeData intranetTheme = ThemeData.light().copyWith(
     primaryColor: Colors.orange[800],
     accentColor: Colors.orange[400],

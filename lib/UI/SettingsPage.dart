@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gvp_sim_db/theme_stuff/ThemeModel.dart';
 import 'package:provider/provider.dart';
-import 'gameData.dart';
 
+import 'package:gvp_sim_db/themeStuff/ThemeModel.dart';
+import 'package:gvp_sim_db/Classes/gameData.dart';
 
+///Pristupne v Appbaru v cele aplikaci, umoznuje zmenit theme nebo jit na TutorialPage
 class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
